@@ -34,16 +34,25 @@ enum TOKEN_TYPE
     TOKEN_DEF_END,
 };
 
+enum TYPE
+{
+    NONE,
+    FUNCTION,
+    DIALOGUE,
+};
+
 struct Token
 {
     TOKEN_TYPE token_type;
     std::string_view lexem;
     int num_value;
+    TYPE type_value;
 };
 
 constexpr std::map<std::string_view, Token> TOKEN_TABLE{
     {"True", {LITERAL, "True", true}},
     {"False", {LITERAL, "True", false}},
+    {"fn", {EXTERN_TYPE, "fn", 0, FUNCTION}},
 };
 
 
