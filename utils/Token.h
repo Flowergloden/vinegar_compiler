@@ -8,7 +8,7 @@
 #include <string_view>
 
 
-enum TOKENS
+enum TOKEN_TYPE
 {
     TOKEN_DEF_BEGIN,
 
@@ -34,15 +34,16 @@ enum TOKENS
     TOKEN_DEF_END,
 };
 
-struct TokenValue
+struct Token
 {
-    TOKENS token_type;
-    bool bool_value;
+    TOKEN_TYPE token_type;
+    std::string_view lexem;
+    int num_value;
 };
 
-constexpr std::map<std::string_view, TokenValue> TOKEN_TABLE{
-    {"True", {LITERAL, true}},
-    {"False", {LITERAL, false}},
+constexpr std::map<std::string_view, Token> TOKEN_TABLE{
+    {"True", {LITERAL, "True", true}},
+    {"False", {LITERAL, "True", false}},
 };
 
 
