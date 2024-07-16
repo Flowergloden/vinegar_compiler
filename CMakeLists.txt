@@ -6,5 +6,6 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(vinegar_compiler main.cpp
         Lexer.cpp
         Lexer.h
-        Token.cpp
-        Token.h)
+        utils/Token.h
+        utils/DFA.cpp
+        utils/DFA.h)
