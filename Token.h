@@ -4,9 +4,12 @@
 
 #ifndef TOKEN_H
 #define TOKEN_H
+#include <map>
+#include <string_view>
 
 
-constexpr enum TOKENS {
+enum TOKENS
+{
     TOKEN_DEF_BEGIN,
 
     ID,
@@ -29,6 +32,17 @@ constexpr enum TOKENS {
     EXTERN_TYPE,
 
     TOKEN_DEF_END,
+};
+
+struct TokenValue
+{
+    TOKENS token_type;
+    bool bool_value;
+};
+
+constexpr std::map<std::string_view, TokenValue> TOKEN_TABLE{
+    {"True", {LITERAL, true}},
+    {"False", {LITERAL, false}},
 };
 
 
