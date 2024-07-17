@@ -57,7 +57,8 @@ DFA::DFA(const std::vector<DFARaw> &src)
                     has_or_syntax = true; // just sign it
                     break;
                 case '-':
-                    // TODO
+                    has_range_syntax = true; // just sign it
+                    break;
 
                 default:
                     std::cerr << "Not impletmented DFA symbol: " << chr << std::endl;
@@ -67,8 +68,6 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 continue;
             }
 
-            prev_chr = chr;
-
             // what actually deal with or syntax
             if (has_or_syntax)
             {
@@ -76,8 +75,27 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 if (has_repeat_state_move_unit(state, chr))
                     continue;
                 state_move_matrix.push_back({state, chr, next_state});
-                has_or_syntax = false;
 
+                has_or_syntax = false;
+                continue;
+            }
+
+            // TODO: deal with other syntax
+            // what actually deal with range syntax
+            if (has_range_syntax)
+            {
+                assert(prev_chr <= chr && "Illegal DFA range def!!");
+
+                auto [state, cond, next_state] = state_move_matrix[state_move_matrix.size() - 1];
+                state_move_matrix.pop_back();
+                for (char i = prev_chr; i <= chr; ++i)
+                {
+                    if (has_repeat_state_move_unit(state_now, i))
+                        continue;
+                    state_move_matrix.push_back({state, i, next_state});
+                }
+
+                has_range_syntax = false;
                 continue;
             }
 
@@ -87,6 +105,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
             state_move_matrix.push_back({state_now, chr, max_state});
             state_now = max_state;
             ++max_state;
+            prev_chr = chr;
         }
 
         final_state[state_now] = token_type;
