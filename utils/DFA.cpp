@@ -45,6 +45,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 case '*':
                     if (has_repeat_state_move_unit(state_now, prev_chr))
                         continue;
+                    // fall back what we added last iter
                     state_now = state_move_matrix[state_move_matrix.size() - 1].state;
                     state_move_matrix.pop_back();
                     state_move_matrix.push_back({state_now, prev_chr, state_now});
