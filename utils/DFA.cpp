@@ -12,10 +12,18 @@ DFA::DFA(const std::vector<DFARaw> &src)
         auto raw_pattern = pattern;
 
         int state_now{0};
+        char prev_chr{};
         for (const auto chr : raw_pattern)
         {
             if (chr == ' ')
                 continue;
+
+            prev_chr = chr;
+
+            if (dfa_symbols.contains(chr))
+            {
+                assert(!dfa_symbols.contains(prev_chr) && "Illegal DFA!!");
+            }
 
             bool has_same{false};
             for (auto [state, cond, next_state] : state_move_matrix)

@@ -8,7 +8,9 @@
 // TEST ONLY
 #include <iostream>
 
+#include <set>
 #include <vector>
+#include <cassert>
 #include "Token.h"
 
 struct DFARaw
@@ -35,6 +37,10 @@ private:
     std::vector<StateMoveUnit> state_move_matrix;
 
     std::map<int, TOKEN_TYPE> final_state;
+
+    const std::set<char> dfa_symbols{
+        '[', ']', '-', '*', '+', '|',
+    };
 };
 
 
