@@ -10,7 +10,7 @@
 
 struct DFARaw
 {
-    std::string_view name;
+    TOKEN_TYPE type;
     std::string_view pattern;
 };
 
@@ -27,6 +27,8 @@ private:
         int next_state;
     };
     std::vector<StateMoveUnit> state_move_matrix;
+
+    std::map<int, TOKEN_TYPE> final_state;
 };
 
 

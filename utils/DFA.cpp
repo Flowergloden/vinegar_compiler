@@ -7,14 +7,15 @@ DFA::DFA(const std::vector<DFARaw> &src)
 {
     for (auto item : src)
     {
-        auto name = item.name;
+        auto type = item.type;
         auto raw_pattern = item.pattern;
 
         int total_state{1};
         int state_now{0};
         for (auto chr : raw_pattern)
         {
-            if (chr == ' ') continue;
+            if (chr == ' ')
+                continue;
 
             bool has_same{false};
             for (auto unit : state_move_matrix)
@@ -27,10 +28,14 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 }
             }
 
-            if (has_same) continue;
+            if (has_same)
+                continue;
 
             state_move_matrix.push_back({state_now, chr, total_state});
+            state_now = total_state;
             ++total_state;
         }
+
+        final_state[state_now] = type;
     }
 }
