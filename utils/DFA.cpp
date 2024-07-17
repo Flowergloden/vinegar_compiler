@@ -5,25 +5,25 @@
 #include "DFA.h"
 DFA::DFA(const std::vector<DFARaw> &src)
 {
-    for (auto item : src)
+    for (auto [type, pattern] : src)
     {
-        auto type = item.type;
-        auto raw_pattern = item.pattern;
+        const auto token_type = type;
+        auto raw_pattern = pattern;
 
         int total_state{1};
         int state_now{0};
-        for (auto chr : raw_pattern)
+        for (const auto chr : raw_pattern)
         {
             if (chr == ' ')
                 continue;
 
             bool has_same{false};
-            for (auto unit : state_move_matrix)
+            for (auto [state, cond, next_state] : state_move_matrix)
             {
-                if (unit.state == state_now && unit.cond == chr)
+                if (state == state_now && cond == chr)
                 {
                     has_same = true;
-                    state_now = unit.next_state;
+                    state_now = next_state;
                     break;
                 }
             }
@@ -36,7 +36,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
             ++total_state;
         }
 
-        final_state[state_now] = type;
+        final_state[state_now] = token_type;
     }
 }
 
@@ -44,14 +44,14 @@ DFA::DFA(const std::vector<DFARaw> &src)
 void DFA::test_dfa()
 {
     std::cout << "state move matrix: \n";
-    for (auto unit : state_move_matrix)
+    for (auto [state, cond, next_state] : state_move_matrix)
     {
-        std::cout << unit.state << "  =>  " << unit.next_state << "  by  " << unit.cond << std::endl;
+        std::cout << state << "  =>  " << next_state << "  by  " << cond << std::endl;
     }
 
     std::cout << "final states: \n";
-    for (auto unit : final_state)
+    for (const auto [state, token_type] : final_state)
     {
-        std::cout << unit.first << ": " << unit.second << std::endl;
+        std::cout << state << ": " << token_type << std::endl;
     }
 }
