@@ -39,3 +39,19 @@ DFA::DFA(const std::vector<DFARaw> &src)
         final_state[state_now] = type;
     }
 }
+
+// TEST ONLY
+void DFA::test_dfa()
+{
+    std::cout << "state move matrix: \n";
+    for (auto unit : state_move_matrix)
+    {
+        std::cout << unit.state << "  =>  " << unit.next_state << "  by  " << unit.cond << std::endl;
+    }
+
+    std::cout << "final states: \n";
+    for (auto unit : final_state)
+    {
+        std::cout << unit.first << ": " << unit.second << std::endl;
+    }
+}

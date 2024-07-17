@@ -5,6 +5,9 @@
 #ifndef DFA_H
 #define DFA_H
 
+// TEST ONLY
+#include <iostream>
+
 #include <vector>
 #include "Token.h"
 
@@ -17,7 +20,10 @@ struct DFARaw
 class DFA
 {
 public:
-    explicit DFA(const std::vector<DFARaw>& src);
+    explicit DFA(const std::vector<DFARaw> &src);
+
+    // TEST ONLY
+    void test_dfa();
 
 private:
     struct StateMoveUnit
