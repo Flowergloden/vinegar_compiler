@@ -3,6 +3,18 @@
 //
 
 #include "DFA.h"
+bool DFA::has_repeat_state_move_unit(int &state_now, const std::string_view::value_type chr)
+{
+    for (auto [state, cond, next_state] : state_move_matrix)
+    {
+        if (state == state_now && cond == chr)
+        {
+            state_now = next_state;
+            return true;
+        }
+    }
+    return false;
+}
 DFA::DFA(const std::vector<DFARaw> &src)
 {
     int total_state{1};
@@ -18,25 +30,14 @@ DFA::DFA(const std::vector<DFARaw> &src)
             if (chr == ' ')
                 continue;
 
-            prev_chr = chr;
-
             if (dfa_symbols.contains(chr))
             {
                 assert(!dfa_symbols.contains(prev_chr) && "Illegal DFA!!");
             }
 
-            bool has_same{false};
-            for (auto [state, cond, next_state] : state_move_matrix)
-            {
-                if (state == state_now && cond == chr)
-                {
-                    has_same = true;
-                    state_now = next_state;
-                    break;
-                }
-            }
+            prev_chr = chr;
 
-            if (has_same)
+            if (has_repeat_state_move_unit(state_now, chr))
                 continue;
 
             state_move_matrix.push_back({state_now, chr, total_state});

@@ -41,6 +41,8 @@ private:
     const std::set<char> dfa_symbols{
         '[', ']', '-', '*', '+', '|',
     };
+
+    bool has_repeat_state_move_unit(int &state_now, std::string_view::value_type chr);
 };
 
 
