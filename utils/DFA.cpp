@@ -17,7 +17,7 @@ bool DFA::has_repeat_state_move_unit(int &state_now, const std::string_view::val
 }
 DFA::DFA(const std::vector<DFARaw> &src)
 {
-    int total_state{1};
+    int max_state{1};
     for (auto [type, pattern] : src)
     {
         const auto token_type = type;
@@ -84,9 +84,9 @@ DFA::DFA(const std::vector<DFARaw> &src)
             if (has_repeat_state_move_unit(state_now, chr))
                 continue;
 
-            state_move_matrix.push_back({state_now, chr, total_state});
-            state_now = total_state;
-            ++total_state;
+            state_move_matrix.push_back({state_now, chr, max_state});
+            state_now = max_state;
+            ++max_state;
         }
 
         final_state[state_now] = token_type;
