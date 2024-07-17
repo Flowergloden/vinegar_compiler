@@ -5,12 +5,12 @@
 #include "DFA.h"
 DFA::DFA(const std::vector<DFARaw> &src)
 {
+    int total_state{1};
     for (auto [type, pattern] : src)
     {
         const auto token_type = type;
         auto raw_pattern = pattern;
 
-        int total_state{1};
         int state_now{0};
         for (const auto chr : raw_pattern)
         {
