@@ -49,7 +49,7 @@ struct Token
     TYPE type_value;
 };
 
-constexpr std::map<std::string_view, Token> TOKEN_TABLE{
+inline std::map<std::string_view, Token> token_table{
     {"True", {LITERAL, "True", true}},
     {"False", {LITERAL, "True", false}},
     {"fn", {EXTERN_TYPE, "fn", 0, FUNCTION}},
