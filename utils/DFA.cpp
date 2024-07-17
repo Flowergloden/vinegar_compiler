@@ -33,7 +33,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
 
             if (dfa_symbols.contains(chr))
             {
-                assert(!dfa_symbols.contains(prev_chr) && "Illegal DFA!!");
+                assert(!dfa_symbols.contains(prev_chr) && prev_chr != char{} && "Illegal DFA!!");
 
                 switch (chr)
                 {
