@@ -8,9 +8,9 @@
 // TEST ONLY
 #include <iostream>
 
+#include <cassert>
 #include <set>
 #include <vector>
-#include <cassert>
 #include "Token.h"
 
 struct DFARaw
@@ -39,10 +39,15 @@ private:
     std::map<int, TOKEN_TYPE> final_state;
 
     const std::set<char> dfa_symbols{
-        '[', ']', '-', '*', '+', '|',
+        '-',
+        '*',
+        '+',
+        '|',
     };
 
     bool has_repeat_state_move_unit(int &state_now, std::string_view::value_type chr);
+    bool deal_with_symbols(int &state_now, char prev_chr, std::string_view::value_type chr, bool &has_or_syntax,
+                           bool &has_range_syntax);
 };
 
 

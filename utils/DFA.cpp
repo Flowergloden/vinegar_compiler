@@ -15,6 +15,47 @@ bool DFA::has_repeat_state_move_unit(int &state_now, const std::string_view::val
     }
     return false;
 }
+bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const char chr, bool &has_or_syntax,
+                            bool &has_range_syntax)
+{
+    if (dfa_symbols.contains(chr)) // TODO: impl bracket match
+    {
+        assert(!dfa_symbols.contains(prev_chr) && prev_chr != char{} && "Illegal DFA!!");
+
+        switch (chr)
+        {
+        case '+':
+            if (has_repeat_state_move_unit(state_now, prev_chr))
+                return true;
+            state_move_matrix.push_back({state_now, prev_chr, state_now});
+            break;
+
+        case '*':
+            if (has_repeat_state_move_unit(state_now, prev_chr))
+                return true;
+            // fall back what we added last iter
+            state_now = state_move_matrix[state_move_matrix.size() - 1].state;
+            state_move_matrix.pop_back();
+            state_move_matrix.push_back({state_now, prev_chr, state_now});
+            break;
+
+        case '|':
+            has_or_syntax = true; // just sign it
+            break;
+        case '-':
+            has_range_syntax = true; // just sign it
+            break;
+
+        default:
+            std::cerr << "Not impletmented DFA symbol: " << chr << std::endl;
+            break;
+        }
+
+        return true;
+    }
+    return false;
+}
+
 DFA::DFA(const std::vector<DFARaw> &src)
 {
     int max_state{1};
@@ -32,41 +73,8 @@ DFA::DFA(const std::vector<DFARaw> &src)
             if (chr == ' ')
                 continue;
 
-            if (dfa_symbols.contains(chr)) // TODO: impl bracket match
-            {
-                assert(!dfa_symbols.contains(prev_chr) && prev_chr != char{} && "Illegal DFA!!");
-
-                switch (chr)
-                {
-                case '+':
-                    if (has_repeat_state_move_unit(state_now, prev_chr))
-                        continue;
-                    state_move_matrix.push_back({state_now, prev_chr, state_now});
-                    break;
-
-                case '*':
-                    if (has_repeat_state_move_unit(state_now, prev_chr))
-                        continue;
-                    // fall back what we added last iter
-                    state_now = state_move_matrix[state_move_matrix.size() - 1].state;
-                    state_move_matrix.pop_back();
-                    state_move_matrix.push_back({state_now, prev_chr, state_now});
-                    break;
-
-                case '|':
-                    has_or_syntax = true; // just sign it
-                    break;
-                case '-':
-                    has_range_syntax = true; // just sign it
-                    break;
-
-                default:
-                    std::cerr << "Not impletmented DFA symbol: " << chr << std::endl;
-                    break;
-                }
-
+            if (deal_with_symbols(state_now, prev_chr, chr, has_or_syntax, has_range_syntax))
                 continue;
-            }
 
             // what actually deal with or syntax
             if (has_or_syntax)
