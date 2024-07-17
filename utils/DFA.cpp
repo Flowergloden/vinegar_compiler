@@ -25,6 +25,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
 
         int state_now{0};
         char prev_chr{};
+        char prev_buffer{};
         for (const auto chr : raw_pattern)
         {
             if (chr == ' ')
@@ -33,6 +34,19 @@ DFA::DFA(const std::vector<DFARaw> &src)
             if (dfa_symbols.contains(chr))
             {
                 assert(!dfa_symbols.contains(prev_chr) && "Illegal DFA!!");
+
+                switch (chr)
+                {
+                case '+':
+                    if (has_repeat_state_move_unit(state_now, prev_chr))
+                        continue;
+                    state_move_matrix.push_back({state_now, prev_chr, state_now});
+                    continue;
+
+                default:
+                    std::cerr << "Not impletmented DFA symbol: " << chr << std::endl;
+                    break;
+                }
             }
 
             prev_chr = chr;
