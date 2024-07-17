@@ -26,6 +26,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
         int state_now{0};
         char prev_chr{};
         bool has_or_syntax{false};
+        bool has_range_syntax{false};
         for (const auto chr : raw_pattern)
         {
             if (chr == ' ')
@@ -75,6 +76,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 if (has_repeat_state_move_unit(state, chr))
                     continue;
                 state_move_matrix.push_back({state, chr, next_state});
+                has_or_syntax = false;
 
                 continue;
             }
