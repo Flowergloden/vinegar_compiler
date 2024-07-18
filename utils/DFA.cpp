@@ -30,6 +30,7 @@ inline bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const ch
             if (has_repeat_state_move_unit(state_now, prev_chr))
                 return true;
 
+            // in this case we add loop state movement for every range element
             if (just_match_range_bracket)
             {
                 for (auto [state, cond, next_state] : state_buffer)
@@ -39,6 +40,7 @@ inline bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const ch
                 return true;
             }
 
+            // in this case we just add a state movement from end to start
             if (just_match_bracket)
             {
                 state_move_matrix.push_back({state_buffer[state_buffer.size() - 1].next_state, state_buffer[0].cond,
