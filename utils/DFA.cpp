@@ -42,50 +42,6 @@ inline bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const ch
             }
             break;
 
-        case '*':
-            if (has_repeat_state_move_unit(state_now, prev_chr))
-                return true;
-
-            // in this case we just need to add a state movement from end to start
-            if (just_match_bracket)
-            {
-                state_move_matrix.push_back({state_buffer[state_buffer.size() - 1].next_state, state_buffer[0].cond,
-                                             state_buffer[0].next_state});
-
-                // TODO: fix final state record
-                // TODO: deal with range syntax
-                just_match_bracket = false;
-                return true;
-            }
-
-            if (just_match_range_bracket)
-            {
-                state_now = state_buffer[0].state;
-                for (int i = 0; i < state_buffer.size(); ++i)
-                {
-                    state_move_matrix.pop_back();
-                }
-                for (auto [state, cond, next_state]: state_buffer)
-                {
-                    state_move_matrix.push_back({state_now, cond, state_now});
-                }
-
-                just_match_range_bracket = false;
-                return true;
-            }
-
-            // otherwise fall back what we added last iter
-            state_now = state_move_matrix[state_move_matrix.size() - 1].state;
-            state_move_matrix.pop_back();
-            state_move_matrix.push_back({state_now, prev_chr, state_now});
-
-            if (has_bracket)
-            {
-                state_buffer.push_back({state_now, prev_chr, state_now});
-            }
-
-            break;
-
         case '|':
             has_or_syntax = true; // just sign it
             break;
