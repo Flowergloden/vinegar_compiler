@@ -39,14 +39,18 @@ inline bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const ch
                 return true;
             }
 
+            if (just_match_bracket)
+            {
+                state_move_matrix.push_back({state_buffer[state_buffer.size() - 1].next_state, state_buffer[0].cond,
+                                             state_buffer[0].next_state});
+
+                just_match_range_bracket = false;
+                return true;
+            }
+
             if (has_bracket)
             {
                 state_buffer.push_back({state_now, prev_chr, state_now});
-            }
-
-            if (just_match_bracket)
-            {
-                // TODO
             }
 
             state_move_matrix.push_back({state_now, prev_chr, state_now});
