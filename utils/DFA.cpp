@@ -17,7 +17,7 @@ bool DFA::has_repeat_state_move_unit(int &state_now, const std::string_view::val
     return false;
 }
 bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const char chr, bool &has_or_syntax,
-                            bool &has_range_syntax, const bool has_bracket, bool just_match_bracket,
+                            bool &has_range_syntax, const bool has_bracket, bool &just_match_bracket,
                             std::vector<StateMoveUnit> &state_buffer)
 {
     if (dfa_symbols.contains(chr)) // TODO: impl bracket match
@@ -45,7 +45,20 @@ bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const char chr,
         case '*':
             if (has_repeat_state_move_unit(state_now, prev_chr))
                 return true;
-            // fall back what we added last iter
+
+            // in this case we just need to add a state movement from end to start
+            if (just_match_bracket)
+            {
+                state_move_matrix.push_back(
+                    {state_buffer[state_buffer.size() - 1].next_state, state_buffer[0].cond, state_buffer[0].next_state});
+
+                // TODO: fix final state record
+                // TODO: deal with range syntax
+                just_match_bracket = false;
+                return true;
+            }
+
+            // otherwise fall back what we added last iter
             state_now = state_move_matrix[state_move_matrix.size() - 1].state;
             state_move_matrix.pop_back();
             state_move_matrix.push_back({state_now, prev_chr, state_now});
@@ -55,10 +68,6 @@ bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const char chr,
                 state_buffer.push_back({state_now, prev_chr, state_now});
             }
 
-            if (just_match_bracket)
-            {
-                // TODO
-            }
             break;
 
         case '|':
