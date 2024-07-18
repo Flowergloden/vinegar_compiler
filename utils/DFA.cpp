@@ -3,6 +3,7 @@
 //
 
 #include "DFA.h"
+
 bool DFA::has_repeat_state_move_unit(int &state_now, const std::string_view::value_type chr)
 {
     for (auto [state, cond, next_state] : state_move_matrix)
@@ -16,7 +17,8 @@ bool DFA::has_repeat_state_move_unit(int &state_now, const std::string_view::val
     return false;
 }
 bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const char chr, bool &has_or_syntax,
-                            bool &has_range_syntax)
+                            bool &has_range_syntax, const bool has_bracket, bool just_match_bracket,
+                            std::vector<StateMoveUnit> &state_buffer)
 {
     if (dfa_symbols.contains(chr)) // TODO: impl bracket match
     {
@@ -28,6 +30,16 @@ bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const char chr,
             if (has_repeat_state_move_unit(state_now, prev_chr))
                 return true;
             state_move_matrix.push_back({state_now, prev_chr, state_now});
+
+            if (has_bracket)
+            {
+                state_buffer.push_back({state_now, prev_chr, state_now});
+            }
+
+            if (just_match_bracket)
+            {
+                // TODO
+            }
             break;
 
         case '*':
@@ -37,6 +49,16 @@ bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const char chr,
             state_now = state_move_matrix[state_move_matrix.size() - 1].state;
             state_move_matrix.pop_back();
             state_move_matrix.push_back({state_now, prev_chr, state_now});
+
+            if (has_bracket)
+            {
+                state_buffer.push_back({state_now, prev_chr, state_now});
+            }
+
+            if (just_match_bracket)
+            {
+                // TODO
+            }
             break;
 
         case '|':
@@ -68,12 +90,34 @@ DFA::DFA(const std::vector<DFARaw> &src)
         char prev_chr{};
         bool has_or_syntax{false};
         bool has_range_syntax{false};
+        bool has_bracket{false};
+        bool just_match_bracket{false};
+        std::vector<StateMoveUnit> state_buffer{};
         for (const auto chr : raw_pattern)
         {
             if (chr == ' ')
                 continue;
 
-            if (deal_with_symbols(state_now, prev_chr, chr, has_or_syntax, has_range_syntax))
+            // sign / unsign bracket
+            if (chr == '(')
+            {
+                assert(!has_bracket && "Unmatched bracket!!");
+
+                state_buffer.clear();
+                has_bracket = true;
+                continue;
+            }
+            if (chr == ')')
+            {
+                assert(has_bracket && "Unmatched bracket!!");
+
+                has_bracket = false;
+                just_match_bracket = true;
+                continue;
+            }
+
+            if (deal_with_symbols(state_now, prev_chr, chr, has_or_syntax, has_range_syntax, has_bracket,
+                                  just_match_bracket, state_buffer)) // has side-effect
                 continue;
 
             // what actually deal with or syntax
@@ -84,6 +128,16 @@ DFA::DFA(const std::vector<DFARaw> &src)
                     continue;
                 state_move_matrix.push_back({state, chr, next_state});
 
+                if (has_bracket)
+                {
+                    state_buffer.push_back({state, chr, next_state});
+                }
+
+                if (just_match_bracket)
+                {
+                    // TODO
+                }
+
                 has_or_syntax = false;
                 continue;
             }
@@ -92,7 +146,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
             // what actually deal with range syntax
             if (has_range_syntax)
             {
-                assert(prev_chr <= chr && "Illegal DFA range def!!");
+                assert(has_bracket && prev_chr <= chr && "Illegal DFA range def!!");
 
                 auto [state, cond, next_state] = state_move_matrix[state_move_matrix.size() - 1];
                 state_move_matrix.pop_back();
@@ -101,6 +155,11 @@ DFA::DFA(const std::vector<DFARaw> &src)
                     if (has_repeat_state_move_unit(state_now, i))
                         continue;
                     state_move_matrix.push_back({state, i, next_state});
+
+                    // There must have been a has_bracket
+                    state_buffer.push_back({state, i, next_state});
+
+                    // There cant be a just_match_brachet
                 }
 
                 has_range_syntax = false;
@@ -111,9 +170,14 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 continue;
 
             state_move_matrix.push_back({state_now, chr, max_state});
+            if (has_bracket)
+            {
+                state_buffer.push_back({state_now, chr, max_state});
+            }
             state_now = max_state;
             ++max_state;
             prev_chr = chr;
+            just_match_bracket = false;
         }
 
         final_state[state_now] = token_type;
