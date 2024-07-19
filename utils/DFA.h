@@ -46,9 +46,9 @@ private:
     };
 
     bool has_repeat_state_move_unit(int &state_now, std::string_view::value_type chr);
-    bool deal_with_symbols(int &state_now, char prev_chr, char chr, bool &has_or_syntax,
-                           bool &has_range_syntax, bool has_bracket, bool &just_match_bracket,
-                           bool &just_match_range_bracket, std::vector<StateMoveUnit> &state_buffer);
+    bool deal_with_symbols(int &state_now, const char prev_chr, const char chr, bool &has_or_syntax,
+                           bool &has_range_syntax, int &bracket, bool &just_match_bracket,
+                           bool &just_match_range_bracket, std::vector<std::vector<StateMoveUnit>> &state_buffer);
 };
 
 
