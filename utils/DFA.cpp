@@ -39,6 +39,7 @@ inline bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const ch
                 {
                     state_move_matrix.push_back({next_state, cond, next_state});
                 }
+                just_match_range_bracket = false;
                 return true;
             }
 
@@ -48,7 +49,7 @@ inline bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const ch
                 state_move_matrix.push_back({lateast_state_buffer[lateast_state_buffer.size() - 1].next_state, lateast_state_buffer[0].cond,
                                              lateast_state_buffer[0].next_state});
 
-                just_match_range_bracket = false;
+                just_match_bracket = false;
                 return true;
             }
 
