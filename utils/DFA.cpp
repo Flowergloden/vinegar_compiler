@@ -101,10 +101,10 @@ DFA::DFA(const std::vector<DFARaw> &src)
         std::vector<std::vector<StateMoveUnit>> state_buffer{};
         for (const auto chr : raw_pattern)
         {
+            // pre-process
             if (chr == ' ')
                 continue;
 
-            // sign / unsign brackets
             if (chr == '[' || chr == '(')
             {
                 state_buffer.emplace_back();
@@ -127,11 +127,14 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 just_match_bracket = true;
                 continue;
             }
+            // logic that doesn't compeletely need to skip this iter
 
+            // logic that need to skip this iter
             if (deal_with_symbols(state_now, prev_chr, chr, has_or_syntax, has_range_syntax, bracket,
                                   just_match_bracket, just_match_range_bracket, state_buffer)) // has side-effect
                 continue;
 
+            // TODO: deal with or syntax with bracket in any other syntax
             // what actually deal with or syntax
             if (has_or_syntax)
             {
@@ -154,7 +157,6 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 continue;
             }
 
-            // TODO: deal with other syntax
             // what actually deal with range syntax
             if (has_range_syntax)
             {
@@ -182,6 +184,8 @@ DFA::DFA(const std::vector<DFARaw> &src)
             if (has_repeat_state_move_unit(state_now, chr))
                 continue;
 
+
+            // logic that deal with default case
             state_move_matrix.push_back({state_now, chr, max_state});
             if (bracket)
             {
