@@ -24,7 +24,7 @@ inline bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const ch
     if (dfa_symbols.contains(chr)) // TODO: impl bracket match
     {
         assert(!dfa_symbols.contains(prev_chr) && prev_chr != char{} && "Illegal DFA!!");
-        std::vector<StateMoveUnit> &lateast_state_buffer{state_buffer[state_buffer.size() - 1]};
+        std::vector<StateMoveUnit> &lateast_state_buffer{state_buffer.back()};
 
         switch (chr)
         {
@@ -40,16 +40,18 @@ inline bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const ch
                     state_move_matrix.push_back({next_state, cond, next_state});
                 }
                 just_match_range_bracket = false;
+                state_buffer.pop_back();
                 return true;
             }
 
             // in this case we just add a state movement from end to start
             if (just_match_bracket)
             {
-                state_move_matrix.push_back({lateast_state_buffer[lateast_state_buffer.size() - 1].next_state,
+                state_move_matrix.push_back({lateast_state_buffer.back().next_state,
                                              lateast_state_buffer[0].cond, lateast_state_buffer[0].next_state});
 
                 just_match_bracket = false;
+                state_buffer.pop_back();
                 return true;
             }
 
