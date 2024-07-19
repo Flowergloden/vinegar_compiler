@@ -46,8 +46,8 @@ inline bool DFA::deal_with_symbols(int &state_now, const char prev_chr, const ch
             // in this case we just add a state movement from end to start
             if (just_match_bracket)
             {
-                state_move_matrix.push_back({lateast_state_buffer[lateast_state_buffer.size() - 1].next_state, lateast_state_buffer[0].cond,
-                                             lateast_state_buffer[0].next_state});
+                state_move_matrix.push_back({lateast_state_buffer[lateast_state_buffer.size() - 1].next_state,
+                                             lateast_state_buffer[0].cond, lateast_state_buffer[0].next_state});
 
                 just_match_bracket = false;
                 return true;
@@ -88,14 +88,15 @@ DFA::DFA(const std::vector<DFARaw> &src)
         auto raw_pattern = pattern;
 
         // flags
-        int state_now{0};
-        char prev_chr{};
-        bool has_or_syntax{false};
-        bool has_range_syntax{false};
-        // bool has_bracket{false};
-        int bracket{0};
-        bool just_match_bracket{false};
-        bool just_match_range_bracket{false};
+        int state_now{0}; // what's the state now
+        char prev_chr{}; // the char in last iter
+        bool has_or_syntax{false}; // there's an '|' syntax need to be prosseced
+        bool has_range_syntax{false}; // there's an '[x-x]' syntax need to be prosseced
+        int bracket{0}; // how many levels of bracket there is
+        bool just_match_bracket{false}; // just ended a bracket-match last iter
+        bool just_match_range_bracket{false}; // just ended a bracket-match for '[x-x]' syntax last iter
+        bool or_syntax_is_waiting{false}; // '|' syntax is waiting for another element
+        bool or_syntax_waiting_is_bracket{false}; // the element '|' syntax is waiting for is in a bracket
 
         std::vector<std::vector<StateMoveUnit>> state_buffer{};
         for (const auto chr : raw_pattern)
