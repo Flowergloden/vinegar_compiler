@@ -56,6 +56,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
                     or_syntax_waiting_is_bracket = true;
                     has_or_syntax = false;
                     just_match_bracket = false;
+                    just_match_range_bracket = false;
                 }
                 state_buffer.emplace_back();
                 ++bracket;
@@ -233,6 +234,28 @@ DFA::DFA(const std::vector<DFARaw> &src)
                     state_move_matrix[state_move_matrix.size() - latest_state_buffer.size()].state =
                         second_latest_state_buffer[0].state;
                     state_move_matrix.back().next_state = second_latest_state_buffer.back().next_state;
+                    state_now = second_latest_state_buffer.back().next_state;
+                    --max_state;
+                }
+
+                // the same as above
+                if (just_match_range_bracket)
+                {
+                    assert(state_buffer.size() >= 2 &&
+                           "state buffer missed somewhere!!(or the or syntax has a single lhs)");
+
+                    auto &latest_state_buffer = state_buffer.back();
+                    auto &second_latest_state_buffer = state_buffer[state_buffer.size() - 2];
+
+                    auto unit{state_move_matrix.rbegin()};
+                    auto end{state_move_matrix.rbegin()};
+                    std::advance(end, latest_state_buffer.size());
+                    for (; unit != end; ++unit)
+                    {
+                        unit->state = second_latest_state_buffer[0].state;
+                        unit->next_state = second_latest_state_buffer.back().next_state;
+                    }
+
                     state_now = second_latest_state_buffer.back().next_state;
                     --max_state;
                 }
