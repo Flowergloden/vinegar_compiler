@@ -36,9 +36,9 @@ DFA::DFA(const std::vector<DFARaw> &src)
         bool or_syntax_is_waiting{false}; // '|' syntax is waiting for another element
         bool or_syntax_waiting_is_bracket{false}; // the element '|' syntax is waiting for is in a bracket
         bool or_syntax_need_keep_a_buffer{false}; // '|' syntax need to keep one more buffer to cache lhs
-
         std::vector<std::vector<StateMoveUnit>> state_buffer{};
-        for (const auto chr : raw_pattern)
+
+        for (const auto chr : raw_pattern) // TODO: deal with multi-level bracket buffer
         {
             // pre-process
             if (chr == ' ')
