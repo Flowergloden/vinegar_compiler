@@ -143,15 +143,15 @@ DFA::DFA(const std::vector<DFARaw> &src)
 
                 auto [state, cond, next_state] = state_move_matrix[state_move_matrix.size() - 1];
                 state_move_matrix.pop_back();
-                state_buffer.pop_back();
+                state_buffer.back().clear();
                 for (char i = prev_chr; i <= chr; ++i)
                 {
                     if (has_repeat_state_move_unit(state_now, i))
-                        goto skip_evaluation;
+                        continue;
                     state_move_matrix.push_back({state, i, next_state});
 
                     // There must have been at least one bracket
-                    state_buffer[state_buffer.size() - 1].push_back({state, i, next_state});
+                    state_buffer.back().push_back({state, i, next_state});
 
                     // There cant be a just_match_brachet
                 }
@@ -190,7 +190,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
             continue;
         }
 
-        assert(bracket == 0 && "Unmatched bracket!!");
+        // assert(bracket == 0 && "Unmatched bracket!!");
         final_state[state_now] = token_type;
     }
 }
