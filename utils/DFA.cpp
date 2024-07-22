@@ -35,6 +35,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
         bool just_match_range_bracket{false}; // just ended a bracket-match for '[x-x]' syntax last iter
         bool or_syntax_is_waiting{false}; // '|' syntax is waiting for another element
         bool or_syntax_waiting_is_bracket{false}; // the element '|' syntax is waiting for is in a bracket
+        bool or_syntax_need_keep_a_buffer{false};
 
         std::vector<std::vector<StateMoveUnit>> state_buffer{};
         for (const auto chr : raw_pattern)
@@ -45,6 +46,10 @@ DFA::DFA(const std::vector<DFARaw> &src)
 
             if (chr == '[' || chr == '(')
             {
+                if (or_syntax_is_waiting)
+                {
+                    or_syntax_waiting_is_bracket = true;
+                }
                 state_buffer.emplace_back();
                 ++bracket;
                 goto skip_evaluation_and_flag_update;
@@ -118,6 +123,14 @@ DFA::DFA(const std::vector<DFARaw> &src)
             // what actually deal with or syntax
             if (has_or_syntax)
             {
+                if (just_match_bracket)
+                {
+                    // TODO: before this, need to impl multi-level bracket first
+                    or_syntax_is_waiting = true;
+                    or_syntax_need_keep_a_buffer = true;
+                    goto skip_evaluation;
+                }
+
                 auto [state, cond, next_state] = state_move_matrix[state_move_matrix.size() - 1];
                 if (has_repeat_state_move_unit(state, chr))
                     goto skip_evaluation;
@@ -126,11 +139,6 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 if (bracket)
                 {
                     state_buffer[state_buffer.size() - 1].push_back({state, chr, next_state});
-                }
-
-                if (just_match_bracket)
-                {
-                    // TODO: before this, need to impl multi-level bracket first
                 }
 
                 goto skip_evaluation;
@@ -171,20 +179,40 @@ DFA::DFA(const std::vector<DFARaw> &src)
             state_now = max_state;
             ++max_state;
 
-            // what has to be done before skip this iter
+            // what has to be done before skipping this iter
         skip_evaluation:
             if (just_match_bracket || just_match_range_bracket)
             {
                 just_match_bracket = false;
                 just_match_range_bracket = false;
-                --bracket;
-                state_buffer.pop_back();
+                if (!or_syntax_need_keep_a_buffer)
+                {
+                    --bracket;
+                    state_buffer.pop_back();
+                }
+                else
+                {
+                    or_syntax_need_keep_a_buffer = false;
+                }
             }
             has_or_syntax = false;
             has_range_syntax = false;
             prev_chr = chr;
 
         skip_evaluation_and_flag_update:
+            if (or_syntax_is_waiting)
+            {
+                if (!or_syntax_waiting_is_bracket)
+                {
+                    assert(!dfa_symbols.contains(chr) && "Illegal DFA or syntax!!");
+
+                    auto &latest_state_buffer = state_buffer.back();
+                    state_move_matrix.push_back(
+                        {latest_state_buffer[0].state, chr, latest_state_buffer.back().next_state});
+
+                    state_buffer.pop_back();
+                }
+            }
 
         skip_whole_iter:
             continue;
