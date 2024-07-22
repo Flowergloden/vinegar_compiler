@@ -46,9 +46,10 @@ DFA::DFA(const std::vector<DFARaw> &src)
 
             if (chr == '[' || chr == '(')
             {
-                if (or_syntax_is_waiting)
+                if (has_or_syntax)
                 {
                     or_syntax_waiting_is_bracket = true;
+                    has_or_syntax = false;
                 }
                 state_buffer.emplace_back();
                 ++bracket;
@@ -211,6 +212,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
                         {latest_state_buffer[0].state, chr, latest_state_buffer.back().next_state});
 
                     state_buffer.pop_back();
+                    or_syntax_is_waiting = false;
                 }
             }
 
