@@ -35,7 +35,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
         bool just_match_range_bracket{false}; // just ended a bracket-match for '[x-x]' syntax last iter
         bool or_syntax_is_waiting{false}; // '|' syntax is waiting for another element
         bool or_syntax_waiting_is_bracket{false}; // the element '|' syntax is waiting for is in a bracket
-        bool or_syntax_need_keep_a_buffer{false};
+        bool or_syntax_need_keep_a_buffer{false}; // '|' syntax need to keep one more buffer to cache lhs
 
         std::vector<std::vector<StateMoveUnit>> state_buffer{};
         for (const auto chr : raw_pattern)
@@ -46,6 +46,9 @@ DFA::DFA(const std::vector<DFARaw> &src)
 
             if (chr == '[' || chr == '(')
             {
+                // this means last or syntax has a bracket rhs
+                // we need to do what we need to do to deal with or syntax with bracket lhs here (see about line 132)
+                // because we will skip flag update this iter and leaving the or syntax flag to next iter is disaster
                 if (has_or_syntax)
                 {
                     or_syntax_is_waiting = true;
@@ -204,6 +207,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
         skip_evaluation_and_flag_update:
             if (or_syntax_is_waiting)
             {
+                // in this case rhs is single, we just need to add a new state
                 if (!or_syntax_waiting_is_bracket)
                 {
                     assert(!dfa_symbols.contains(chr) && "Illegal DFA or syntax!!");
@@ -216,9 +220,12 @@ DFA::DFA(const std::vector<DFARaw> &src)
                     or_syntax_is_waiting = false;
                 }
 
+                // in this case rhs is a bracket, we need to modify state and end of this part of state movements
                 if (just_match_bracket)
                 {
-                    assert(state_buffer.size() >= 2 && "state buffer missed somewhere!!");
+                    // NOTE: we do not support or syntax with single lhs and bracket rhs
+                    assert(state_buffer.size() >= 2 &&
+                           "state buffer missed somewhere!!(or the or syntax has a single lhs)");
 
                     auto &latest_state_buffer = state_buffer.back();
                     auto &second_latest_state_buffer = state_buffer[state_buffer.size() - 2];
