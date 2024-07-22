@@ -48,8 +48,11 @@ DFA::DFA(const std::vector<DFARaw> &src)
             {
                 if (has_or_syntax)
                 {
+                    or_syntax_is_waiting = true;
+                    or_syntax_need_keep_a_buffer = true;
                     or_syntax_waiting_is_bracket = true;
                     has_or_syntax = false;
+                    just_match_bracket = false;
                 }
                 state_buffer.emplace_back();
                 ++bracket;
@@ -70,7 +73,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 goto skip_evaluation_and_flag_update;
             }
 
-            if (dfa_symbols.contains(chr)) // TODO: impl bracket match
+            if (dfa_symbols.contains(chr))
             {
                 assert(!dfa_symbols.contains(prev_chr) && prev_chr != char{} && "Illegal DFA!!");
                 std::vector<StateMoveUnit> &lateast_state_buffer{state_buffer.back()};
@@ -120,13 +123,11 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 }
             }
 
-            // TODO: deal with or syntax with bracket in any other syntax
             // what actually deal with or syntax
             if (has_or_syntax)
             {
                 if (just_match_bracket)
                 {
-                    // TODO: before this, need to impl multi-level bracket first
                     or_syntax_is_waiting = true;
                     or_syntax_need_keep_a_buffer = true;
                     goto skip_evaluation;
@@ -213,6 +214,20 @@ DFA::DFA(const std::vector<DFARaw> &src)
 
                     state_buffer.pop_back();
                     or_syntax_is_waiting = false;
+                }
+
+                if (just_match_bracket)
+                {
+                    assert(state_buffer.size() >= 2 && "state buffer missed somewhere!!");
+
+                    auto &latest_state_buffer = state_buffer.back();
+                    auto &second_latest_state_buffer = state_buffer[state_buffer.size() - 2];
+
+                    state_move_matrix[state_move_matrix.size() - latest_state_buffer.size()].state =
+                        second_latest_state_buffer[0].state;
+                    state_move_matrix.back().next_state = second_latest_state_buffer.back().next_state;
+                    state_now = second_latest_state_buffer.back().next_state;
+                    --max_state;
                 }
             }
 
