@@ -11,7 +11,6 @@ Lexer::Lexer(DFA &dfa, const std::string_view raw) : dfa(dfa)
     {
         if (this->dfa.separators.contains(*chr))
         {
-            ++chr;
             continue;
         }
 
@@ -20,7 +19,7 @@ Lexer::Lexer(DFA &dfa, const std::string_view raw) : dfa(dfa)
 
         const TOKEN_TYPE type{this->dfa.get_token_type(final_state)};
         if (type == UNKNOWN_TOKEN)
-            std::cerr << "Unknow token: " << lexeme << std::endl;
+            std::cerr << "Unknow token: " << lexeme << *chr << std::endl;
 
         if (token_table.contains(lexeme))
         {
@@ -30,12 +29,13 @@ Lexer::Lexer(DFA &dfa, const std::string_view raw) : dfa(dfa)
         {
             tokens.push_back({type, lexeme});
         }
+        ++chr;
         // TODO: deal with comment
     }
 }
 void Lexer::print_all_tokens()
 {
-    for (const auto& [token_type, lexeme, value, type] : tokens)
+    for (const auto &[token_type, lexeme, value, type] : tokens)
     {
         std::cout << "lexeme: " << lexeme << "; token type: " << token_type << "; value: " << value
                   << "; type: " << type << std::endl;
