@@ -37,7 +37,7 @@ void Lexer::print_all_tokens()
 {
     for (auto [token_type, lexeme, value, type] : tokens)
     {
-        std::cout << "token type: " << token_type << "; lexeme: " << lexeme << "; value: " << value << "; type: " << type
-                  << std::endl;
+        std::cout << "lexeme: " << *new std::string{lexeme} << "; token type: " << token_type << "; value: " << value
+                  << "; type: " << type << std::endl;
     }
 }
