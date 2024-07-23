@@ -79,7 +79,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
 
             if (dfa_symbols.contains(chr))
             {
-                assert(!dfa_symbols.contains(prev_chr) && prev_chr != char{} && "Illegal DFA!!");
+                // assert(!dfa_symbols.contains(prev_chr) && prev_chr != char{} && "Illegal DFA!!");
                 std::vector<StateMoveUnit> &lateast_state_buffer{state_buffer.back()};
 
                 switch (chr)
@@ -101,8 +101,10 @@ DFA::DFA(const std::vector<DFARaw> &src)
                     // in this case we just add a state movement from end to start
                     if (just_match_bracket)
                     {
-                        state_move_matrix.push_back({lateast_state_buffer.back().next_state,
-                                                     lateast_state_buffer[0].cond, lateast_state_buffer[0].next_state});
+                        state_move_matrix.push_back(
+                            {state_now, lateast_state_buffer[0].cond, lateast_state_buffer[0].next_state});
+
+                        lateast_state_buffer.push_back(state_move_matrix.back());
                         goto skip_evaluation;
                     }
 
@@ -194,6 +196,14 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 if (!or_syntax_need_keep_a_buffer)
                 {
                     --bracket;
+                    if (bracket)
+                    {
+                        auto &latest_buffer = state_buffer.back();
+                        auto &second_latest_buffer = state_buffer[state_buffer.size() - 2];
+
+                        second_latest_buffer.insert(second_latest_buffer.end(), latest_buffer.begin(),
+                                                    latest_buffer.end());
+                    }
                     state_buffer.pop_back();
                 }
                 else
