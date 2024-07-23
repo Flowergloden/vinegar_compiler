@@ -45,7 +45,7 @@ enum TYPE
 struct Token
 {
     TOKEN_TYPE token_type;
-    std::string_view lexeme;
+    const std::string lexeme;
     int num_value;
     TYPE type_value;
 };

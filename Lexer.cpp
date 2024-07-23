@@ -35,9 +35,9 @@ Lexer::Lexer(DFA &dfa, const std::string_view raw) : dfa(dfa)
 }
 void Lexer::print_all_tokens()
 {
-    for (auto [token_type, lexeme, value, type] : tokens)
+    for (const auto& [token_type, lexeme, value, type] : tokens)
     {
-        std::cout << "lexeme: " << *new std::string{lexeme} << "; token type: " << token_type << "; value: " << value
+        std::cout << "lexeme: " << lexeme << "; token type: " << token_type << "; value: " << value
                   << "; type: " << type << std::endl;
     }
 }
