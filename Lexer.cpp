@@ -7,7 +7,7 @@ Lexer::Lexer(DFA &dfa, const std::string_view raw) : dfa(dfa)
 {
     auto chr = raw.begin();
     const auto end = raw.end();
-    while (chr != end)
+    while (chr < end)
     {
         if (this->dfa.separators.contains(*chr))
         {
@@ -24,6 +24,13 @@ Lexer::Lexer(DFA &dfa, const std::string_view raw) : dfa(dfa)
         if (token_table.contains(lexeme))
         {
             tokens.push_back(token_table[lexeme]);
+        }
+        else if (type == COMMENT)
+        {
+            while (chr != end && *chr != '\n')
+            {
+                ++chr;
+            }
         }
         else
         {
