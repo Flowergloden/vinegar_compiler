@@ -24,7 +24,7 @@ class DFA
 public:
     explicit DFA(const std::vector<DFARaw> &src);
 
-    constexpr int FIRST_STATE{0};
+    const int first_state{0};
 
     int scan_move(std::string &lexeme, std::string_view::iterator &chr, const std::string_view::iterator &end);
 
