@@ -52,7 +52,7 @@ struct Token
 
 inline std::map<std::string_view, Token> token_table{
     {"True", {LITERAL, "True", true}},
-    {"False", {LITERAL, "True", false}},
+    {"False", {LITERAL, "False", false}},
     {"fn", {EXTERN_TYPE, "fn", 0, FUNCTION}},
 };
 
