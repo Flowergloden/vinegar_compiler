@@ -9,6 +9,12 @@ Lexer::Lexer(DFA &dfa, const std::string_view raw) : dfa(dfa)
     const auto end = raw.end();
     while (chr != end)
     {
+        if (this->dfa.separators.contains(*chr))
+        {
+            ++chr;
+            continue;
+        }
+
         std::string lexeme{};
         const int final_state{this->dfa.scan_move(lexeme, chr, end)};
 

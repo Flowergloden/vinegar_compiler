@@ -38,6 +38,12 @@ public:
         return UNKNOWN_TOKEN;
     }
 
+    const std::set<char> separators{
+        ' ',
+        '\n',
+        '\t',
+    };
+
     // TEST ONLY
     void test_dfa();
 
@@ -57,12 +63,6 @@ private:
         '*',
         '+',
         '|',
-    };
-
-    const std::set<char> separators{
-        ' ',
-        '\n',
-        '\t',
     };
 
     const int unknown_state{0};
