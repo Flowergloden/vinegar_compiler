@@ -127,7 +127,6 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 }
             }
 
-            // TODO: deal with case that lhs and rhs has same start chars
             // what actually deal with or syntax
             if (has_or_syntax)
             {
@@ -151,7 +150,6 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 goto skip_evaluation;
             }
 
-            // TODO: deal with conflict caused by such as [A-Z]+ and (True)
             // what actually deal with range syntax
             if (has_range_syntax)
             {
@@ -233,8 +231,24 @@ DFA::DFA(const std::vector<DFARaw> &src)
                     auto &latest_state_buffer = state_buffer.back();
                     auto &second_latest_state_buffer = state_buffer[state_buffer.size() - 2];
 
-                    state_move_matrix[state_move_matrix.size() - latest_state_buffer.size()].state =
-                        second_latest_state_buffer[0].state;
+                    int offset{0};
+                    for (int i = 0; i < std::min(latest_state_buffer.size(), second_latest_state_buffer.size()); ++i)
+                    {
+                        if (latest_state_buffer[i].cond != second_latest_state_buffer[i].cond)
+                            break;
+
+                        ++offset;
+                    }
+
+                    auto s{state_move_matrix.begin()};
+                    std::advance(s, state_move_matrix.size() - latest_state_buffer.size());
+                    auto e{s};
+                    std::advance(e, offset);
+                    state_move_matrix.erase(s, e);
+
+                    state_move_matrix[state_move_matrix.size() - latest_state_buffer.size() + offset].state =
+                        second_latest_state_buffer[offset].state;
+
                     state_move_matrix.back().next_state = second_latest_state_buffer.back().next_state;
                     state_now = second_latest_state_buffer.back().next_state;
                     --max_state;

@@ -37,7 +37,6 @@ Lexer::Lexer(DFA &dfa, const std::string_view raw) : dfa(dfa)
             tokens.push_back({type, lexeme});
         }
         ++chr;
-        // TODO: deal with comment
     }
 }
 void Lexer::print_all_tokens()
