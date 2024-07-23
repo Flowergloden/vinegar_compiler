@@ -127,6 +127,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 }
             }
 
+            // TODO: deal with case that lhs and rhs has same start chars
             // what actually deal with or syntax
             if (has_or_syntax)
             {
