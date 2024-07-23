@@ -151,6 +151,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
                 goto skip_evaluation;
             }
 
+            // TODO: deal with conflict caused by such as [A-Z]+ and (True)
             // what actually deal with range syntax
             if (has_range_syntax)
             {
