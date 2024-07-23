@@ -24,6 +24,20 @@ class DFA
 public:
     explicit DFA(const std::vector<DFARaw> &src);
 
+    constexpr int FIRST_STATE{0};
+
+    int scan_move(std::string &lexeme, std::string_view::iterator &chr, const std::string_view::iterator &end);
+
+    TOKEN_TYPE get_token_type(const int state)
+    {
+        if (final_state.contains(state))
+        {
+            return final_state[state];
+        }
+
+        return UNKNOWN_TOKEN;
+    }
+
     // TEST ONLY
     void test_dfa();
 
@@ -45,7 +59,17 @@ private:
         '|',
     };
 
+    const std::set<char> separators{
+        ' ',
+        '\n',
+        '\t',
+    };
+
+    const int unknown_state{0};
+
     bool has_repeat_state_move_unit(int &state_now, std::string_view::value_type chr);
+
+    int move(int state, char cond);
 };
 
 

@@ -270,6 +270,36 @@ DFA::DFA(const std::vector<DFARaw> &src)
     }
 }
 
+int DFA::scan_move(std::string &lexeme, std::string_view::iterator &chr, const std::string_view::iterator &end)
+{
+    int state = FIRST_STATE;
+
+    while (true)
+    {
+        if (chr == end)
+            return state;
+
+        const int next_state = move(state, *chr);
+        if (next_state == unknown_state)
+            return state;
+
+        state = next_state;
+        lexeme.push_back(*chr);
+
+        ++chr;
+    }
+}
+
+int DFA::move(const int state, const char cond)
+{
+    for (auto [m_state, m_cond, m_next_state] : state_move_matrix)
+    {
+        if (m_state == state && m_cond == cond)
+            return m_next_state;
+    }
+    return unknown_state;
+}
+
 // TEST ONLY
 void DFA::test_dfa()
 {

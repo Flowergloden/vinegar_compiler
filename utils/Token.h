@@ -31,6 +31,7 @@ enum TOKEN_TYPE
 
     EXTERN_TYPE,
 
+    UNKNOWN_TOKEN,
     TOKEN_DEF_END,
 };
 
@@ -44,7 +45,7 @@ enum TYPE
 struct Token
 {
     TOKEN_TYPE token_type;
-    std::string_view lexem;
+    std::string_view lexeme;
     int num_value;
     TYPE type_value;
 };
