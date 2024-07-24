@@ -101,10 +101,25 @@ DFA::DFA(const std::vector<DFARaw> &src)
                     // in this case we just add a state movement from end to start
                     if (just_match_bracket)
                     {
-                        state_move_matrix.push_back(
-                            {state_now, lateast_state_buffer[0].cond, lateast_state_buffer[0].next_state});
+                        for (auto [state, cond, next_state] : lateast_state_buffer)
+                        {
+                            if (next_state == state_now)
+                            {
+                                for (auto [l_state, l_cond, l_next_state] : lateast_state_buffer)
+                                {
+                                    if (l_next_state != lateast_state_buffer[0].next_state)
+                                        break;
 
-                        lateast_state_buffer.push_back(state_move_matrix.back());
+                                    if (has_repeat_state_move_unit(state_now, l_cond))
+                                        continue;
+
+                                    state_move_matrix.push_back(
+                                        {state_now, l_cond, lateast_state_buffer[0].next_state});
+
+                                    lateast_state_buffer.push_back(state_move_matrix.back());
+                                }
+                            }
+                        }
                         goto skip_evaluation;
                     }
 
@@ -139,14 +154,14 @@ DFA::DFA(const std::vector<DFARaw> &src)
                     goto skip_evaluation;
                 }
 
-                auto [state, cond, next_state] = state_move_matrix[state_move_matrix.size() - 1];
+                auto [state, cond, next_state] = state_move_matrix.back();
                 if (has_repeat_state_move_unit(state, chr))
                     goto skip_evaluation;
                 state_move_matrix.push_back({state, chr, next_state});
 
                 if (bracket)
                 {
-                    state_buffer[state_buffer.size() - 1].push_back({state, chr, next_state});
+                    state_buffer.back().push_back({state, chr, next_state});
                 }
 
                 goto skip_evaluation;
