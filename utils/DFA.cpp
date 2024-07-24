@@ -313,7 +313,32 @@ DFA::DFA(const std::vector<DFARaw> &src)
 
 DFA::DFA(const std::vector<DFARaw> &src, int)
 {
+    int totol_state{0}; // how many states do we have now
 
+    for (auto [token_type, raw] : src)
+    {
+        int state_now{0};
+        int bracket{0};
+        std::vector<std::vector<StateMoveUnit>> state_buffer{{}};
+
+        for (auto chr = raw.begin(); chr != raw.end(); ++chr)
+        {
+            auto &latest_state_buffer = state_buffer.back();
+            switch (*chr)
+            {
+                // TODO: deal with symbols
+
+            default:
+                ++totol_state;
+                latest_state_buffer.push_back({state_now, *chr, totol_state});
+                state_now = totol_state;
+            }
+        }
+        assert(state_buffer.size() == 1 && "Unmatched bracket!!");
+
+        final_state[state_now] = token_type;
+        state_move_matrix.insert(state_move_matrix.end(), state_buffer.front().begin(), state_buffer.front().end());
+    }
 }
 
 int DFA::scan_move(std::string &lexeme, std::string_view::iterator &chr, const std::string_view::iterator &end)
