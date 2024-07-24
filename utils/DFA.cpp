@@ -311,6 +311,11 @@ DFA::DFA(const std::vector<DFARaw> &src)
     }
 }
 
+DFA::DFA(const std::vector<DFARaw> &src, int)
+{
+
+}
+
 int DFA::scan_move(std::string &lexeme, std::string_view::iterator &chr, const std::string_view::iterator &end)
 {
     int state = first_state;
