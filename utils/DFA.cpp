@@ -17,6 +17,21 @@ bool DFA::has_repeat_state_move_unit(int &state_now, const std::string_view::val
     return false;
 }
 
+// TODO: think twice how to deal with repeat movements
+bool DFA::has_repeat_state_move_unit(int &out_state_now, const std::string_view::value_type chr,
+                                     const std::vector<StateMoveUnit> &src)
+{
+    for (auto [state, cond, next_state] : src)
+    {
+        if (state == out_state_now && cond == chr)
+        {
+            out_state_now = next_state;
+            return true;
+        }
+    }
+    return false;
+}
+
 DFA::DFA(const std::vector<DFARaw> &src)
 {
     int max_state{1};
@@ -330,8 +345,16 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
 
             default:
                 ++totol_state;
-                latest_state_buffer.push_back({state_now, *chr, totol_state});
-                state_now = totol_state;
+
+                if (int new_state{0}; has_repeat_state_move_unit(new_state, *chr, latest_state_buffer))
+                {
+                    state_now = new_state;
+                }
+                else
+                {
+                    latest_state_buffer.push_back({state_now, *chr, totol_state});
+                    state_now = totol_state;
+                }
             }
         }
         assert(state_buffer.size() == 1 && "Unmatched bracket!!");

@@ -70,6 +70,8 @@ private:
     const int unknown_state{0};
 
     bool has_repeat_state_move_unit(int &state_now, std::string_view::value_type chr);
+    static bool has_repeat_state_move_unit(int &out_state_now, std::string_view::value_type chr,
+                                    const std::vector<StateMoveUnit> &src);
 
     int move(int state, char cond);
 };
