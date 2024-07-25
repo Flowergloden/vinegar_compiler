@@ -384,7 +384,7 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
         assert(state_buffer.size() == 1 && "Unmatched bracket!!");
 
         final_state[state_now] = token_type;
-        state_move_matrix.insert(state_move_matrix.end(), state_buffer.front().begin(), state_buffer.front().end());
+        buffer_passthrough(state_buffer, state_move_matrix);
     }
 }
 

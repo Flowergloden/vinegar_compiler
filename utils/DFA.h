@@ -83,6 +83,15 @@ private:
 
         second_latest_buffer.insert(second_latest_buffer.end(), latest_buffer.begin(), latest_buffer.end());
     };
+
+    static void buffer_passthrough(const std::vector<std::vector<StateMoveUnit>> &state_buffer,
+                                   std::vector<StateMoveUnit> &state_move_matrix)
+    {
+        assert(state_buffer.size() == 1 && "Unmatched bracket!!");
+
+        auto buffer = state_buffer.front();
+        state_move_matrix.insert(state_move_matrix.end(), buffer.begin(), buffer.end());
+    }
 };
 
 
