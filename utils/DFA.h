@@ -71,9 +71,18 @@ private:
 
     bool has_repeat_state_move_unit(int &state_now, std::string_view::value_type chr);
     static bool has_repeat_state_move_unit(int &out_state_now, std::string_view::value_type chr,
-                                    const std::vector<StateMoveUnit> &src);
+                                           const std::vector<StateMoveUnit> &src);
 
     int move(int state, char cond);
+
+    static void buffer_passthrough(std::vector<std::vector<StateMoveUnit>> &state_buffer)
+    {
+        assert(state_buffer.size() >= 2 && "buffer failed!!");
+        auto &latest_buffer = state_buffer.back();
+        auto &second_latest_buffer = state_buffer[state_buffer.size() - 2];
+
+        second_latest_buffer.insert(second_latest_buffer.end(), latest_buffer.begin(), latest_buffer.end());
+    };
 };
 
 

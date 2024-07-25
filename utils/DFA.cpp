@@ -336,12 +336,28 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
         int bracket{0};
         std::vector<std::vector<StateMoveUnit>> state_buffer{{}};
 
+        // flags
+        bool just_match_bracket{false};
+        bool just_match_range_bracket{false};
+
         for (auto chr = raw.begin(); chr != raw.end(); ++chr)
         {
             auto &latest_state_buffer = state_buffer.back();
             switch (*chr)
             {
                 // TODO: deal with symbols
+            case '(' | '[':
+                ++bracket;
+                state_buffer.emplace_back();
+                break;
+            case ')':
+                --bracket;
+                just_match_bracket = true;
+                break;
+            case ']':
+                --bracket;
+                just_match_range_bracket = true;
+                break;
 
             default:
                 ++totol_state;
@@ -355,6 +371,14 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
                     latest_state_buffer.push_back({state_now, *chr, totol_state});
                     state_now = totol_state;
                 }
+            }
+
+            if ((just_match_bracket || just_match_range_bracket) && !dfa_symbols.contains(*(chr + 1)))
+            {
+                buffer_passthrough(state_buffer);
+                --bracket;
+                just_match_bracket = false;
+                just_match_range_bracket = false;
             }
         }
         assert(state_buffer.size() == 1 && "Unmatched bracket!!");
