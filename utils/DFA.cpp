@@ -378,6 +378,7 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
                 (chr + 1 == raw.end() || !dfa_symbols.contains(*(chr + 1))))
             {
                 buffer_passthrough(state_buffer);
+                state_buffer.pop_back();
                 --bracket;
                 just_match_bracket = false;
                 just_match_range_bracket = false;
