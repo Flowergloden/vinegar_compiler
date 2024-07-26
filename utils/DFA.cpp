@@ -369,6 +369,7 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
                     const int origin_state{latest_state_buffer.front().state};
                     const int dest_state{state_now};
 
+                    std::vector<StateMoveUnit> tmp_states{};
                     for (auto [d_state, d_cond, d_next_state] : latest_state_buffer)
                     {
                         if (d_next_state == dest_state)
@@ -377,17 +378,18 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
                             {
                                 if (o_state == origin_state)
                                 {
-                                    latest_state_buffer.push_back({d_state, o_cond, o_next_state});
+                                    tmp_states.push_back({d_next_state, o_cond, o_next_state});
                                 }
                             }
                         }
                     }
+                    latest_state_buffer.insert(latest_state_buffer.end(), tmp_states.begin(), tmp_states.end());
+                    // TODO: deal with dupicatation somewhere
                 }
                 else // in this case we just need to add a loopback for previous movement
                 {
-                    auto &last_movement{latest_state_buffer.back()};
-                    latest_state_buffer.push_back(
-                        {last_movement.next_state, last_movement.cond, last_movement.next_state});
+                    const auto &[state, cond, next_state]{latest_state_buffer.back()};
+                    latest_state_buffer.push_back({next_state, cond, next_state});
                 }
 #pragma endregion
                 break;
