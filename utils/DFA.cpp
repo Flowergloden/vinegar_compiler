@@ -391,6 +391,21 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
                 }
 #pragma endregion
                 break;
+            case '-':
+                { // this external block targets at avoid crosses initialization in switch jumping
+                    assert(chr - 1 != raw.begin() && !dfa_symbols.contains(*(chr - 1)) && "Unresolved symbol: \"-\"");
+                    const int state{latest_state_buffer.back().state};
+                    const int next_state{latest_state_buffer.back().next_state};
+                    latest_state_buffer.pop_back(); // fall back previous movement
+                    const char lhs{*(chr - 1)};
+                    const char rhs{*(chr + 1)};
+                    for (char i = lhs; i <= rhs; ++i)
+                    {
+                        latest_state_buffer.push_back({state, i, next_state});
+                    }
+                }
+                ++chr;
+                break;
 
             default:
 #pragma region DEFAULT_SOLUTION
