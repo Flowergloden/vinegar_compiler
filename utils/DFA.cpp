@@ -359,6 +359,33 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
                 --bracket;
                 just_match_range_bracket = true;
                 break;
+            case '+':
+                if (just_match_bracket || just_match_range_bracket)
+                {
+                    const int origin_state{latest_state_buffer.front().state};
+                    const int dest_state{state_now};
+
+                    for (auto [d_state, d_cond, d_next_state] : latest_state_buffer)
+                    {
+                        if (d_next_state == dest_state)
+                        {
+                            for (auto [o_state, o_cond, o_next_state] : latest_state_buffer)
+                            {
+                                if (o_state == origin_state)
+                                {
+                                    latest_state_buffer.push_back({d_state, o_cond, o_next_state});
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    auto &last_movement{latest_state_buffer.back()};
+                    latest_state_buffer.push_back(
+                        {last_movement.next_state, last_movement.cond, last_movement.next_state});
+                }
+                break;
 
             default:
                 ++totol_state;
