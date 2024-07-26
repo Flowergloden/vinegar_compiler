@@ -360,6 +360,10 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
                 just_match_range_bracket = true;
                 break;
             case '+':
+#pragma region +_SOLUTION
+                // in this case we need to find out all movement that lead to ending state in this buffer
+                // and all movement that start from origin state in this buffer
+                // then add a loopback for each origin-ending pair
                 if (just_match_bracket || just_match_range_bracket)
                 {
                     const int origin_state{latest_state_buffer.front().state};
@@ -379,15 +383,17 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
                         }
                     }
                 }
-                else
+                else // in this case we just need to add a loopback for previous movement
                 {
                     auto &last_movement{latest_state_buffer.back()};
                     latest_state_buffer.push_back(
                         {last_movement.next_state, last_movement.cond, last_movement.next_state});
                 }
+#pragma endregion
                 break;
 
             default:
+#pragma region DEFAULT_SOLUTION
                 ++totol_state;
 
                 if (int new_state{0}; has_repeat_state_move_unit(new_state, *chr, latest_state_buffer))
@@ -399,8 +405,10 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
                     latest_state_buffer.push_back({state_now, *chr, totol_state});
                     state_now = totol_state;
                 }
+#pragma endregion
             }
 
+            // pop latest buffer and passthrough elements to previous buffer
             if ((just_match_bracket || just_match_range_bracket) &&
                 (chr + 1 == raw.end() || !dfa_symbols.contains(*(chr + 1))))
             {
