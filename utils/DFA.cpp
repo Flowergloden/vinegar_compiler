@@ -346,7 +346,8 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
             switch (*chr)
             {
                 // TODO: deal with symbols
-            case '(' | '[':
+            case '(':
+            case '[':
                 ++bracket;
                 state_buffer.emplace_back();
                 break;
