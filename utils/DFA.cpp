@@ -428,6 +428,7 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
                     if (*(chr - 1) != ')' && *(chr - 1) != ']')
                     {
                         state_buffer.push_back({latest_state_buffer.back()});
+                        just_match_bracket = true;
                     }
 
                     or_syntax_need_keep_a_bracket = true;
