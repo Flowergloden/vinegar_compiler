@@ -73,6 +73,19 @@ private:
     static bool has_repeat_state_move_unit(int &out_state_now, std::string_view::value_type chr,
                                            const std::vector<StateMoveUnit> &src);
 
+    static bool has_duplicate_movement(int state, char cond, int next_state, std::vector<StateMoveUnit> &target)
+    {
+        for (auto [t_state, t_cond, t_next_state] : target)
+        {
+            if (state == t_state && cond == t_cond)
+            {
+                assert(next_state == t_next_state && "Unresolved condition!!"); // TODO: Deal with this
+                return true;
+            }
+        }
+        return false;
+    }
+
     int move(int state, char cond);
 
     static void pre_process(std::string &raw)
@@ -93,7 +106,14 @@ private:
         auto &latest_buffer = state_buffer.back();
         auto &second_latest_buffer = state_buffer[state_buffer.size() - 2];
 
-        second_latest_buffer.insert(second_latest_buffer.end(), latest_buffer.begin(), latest_buffer.end());
+        // second_latest_buffer.insert(second_latest_buffer.end(), latest_buffer.begin(), latest_buffer.end());
+        for (auto [state, cond, next_state] : latest_buffer)
+        {
+            if (!has_duplicate_movement(state, cond, next_state, second_latest_buffer))
+            {
+                second_latest_buffer.push_back({state, cond, next_state});
+            }
+        }
     };
 
     static void buffer_passthrough(const std::vector<std::vector<StateMoveUnit>> &state_buffer,
