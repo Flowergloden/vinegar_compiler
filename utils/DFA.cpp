@@ -341,6 +341,8 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
         // flags
         bool just_match_bracket{false};
         bool just_match_range_bracket{false};
+        bool or_syntax_is_waiting_bracket{false};
+        bool or_syntax_need_keep_a_bracket{false};
 
         for (auto chr = raw.begin(); chr != raw.end(); ++chr)
         {
@@ -348,6 +350,8 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
             switch (*chr)
             {
                 // TODO: deal with symbols
+            case ' ':
+                continue;
             case '(':
             case '[':
                 ++bracket;
@@ -396,7 +400,7 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
 #pragma endregion
                 break;
             case '-':
-                { // this external block targets at avoid crosses initialization in switch jumping
+                { // this external block targets at avoiding crosses initialization in switch jumping
                     assert(chr - 1 != raw.begin() && !dfa_symbols.contains(*(chr - 1)) && "Unresolved symbol: \"-\"");
                     const int state{latest_state_buffer.back().state};
                     const int next_state{latest_state_buffer.back().next_state};
@@ -409,6 +413,34 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
                     }
                 }
                 ++chr;
+                break;
+            case '|':
+                assert(chr + 1 != raw.end() && !dfa_symbols.contains(*(chr + 1)) &&
+                       "Unresolved symbol: \"|\"");
+                if (*(chr + 1) == '(' || *(chr + 1) == '[')
+                {
+                    or_syntax_is_waiting_bracket = true;
+
+                    if (*(chr - 1) == ')' || *(chr - 1) == ']')
+                    {
+                        or_syntax_need_keep_a_bracket = true;
+                    }
+                }
+                else
+                {
+                    if (*(chr - 1) == ')' || *(chr - 1) == ']')
+                    {
+                        const int state{latest_state_buffer.front().state};
+                        const int next_state{latest_state_buffer.back().next_state};
+                        latest_state_buffer.push_back({state, *(chr + 1), next_state});
+                    }
+                    else
+                    {
+                        latest_state_buffer.push_back(
+                            {latest_state_buffer.back().state, *(chr + 1), latest_state_buffer.back().next_state});
+                    }
+                    ++chr;
+                }
                 break;
 
             default:
