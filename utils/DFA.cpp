@@ -332,6 +332,8 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
 
     for (auto [token_type, raw] : src)
     {
+        pre_process(raw);
+
         int state_now{0};
         int bracket{0};
         std::vector<std::vector<StateMoveUnit>> state_buffer{{}};

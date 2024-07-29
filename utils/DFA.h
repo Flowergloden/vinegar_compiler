@@ -16,7 +16,7 @@
 struct DFARaw
 {
     TOKEN_TYPE type;
-    std::string_view pattern;
+    std::string pattern;
 };
 
 class DFA
@@ -74,6 +74,18 @@ private:
                                            const std::vector<StateMoveUnit> &src);
 
     int move(int state, char cond);
+
+    static void pre_process(std::string &raw)
+    {
+        for (auto i = raw.begin(); i != raw.end(); ++i)
+        {
+            if (*i == ' ')
+            {
+                raw.erase(i);
+                --i;
+            }
+        }
+    };
 
     static void buffer_passthrough(std::vector<std::vector<StateMoveUnit>> &state_buffer)
     {
