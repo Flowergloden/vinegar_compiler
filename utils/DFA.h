@@ -67,6 +67,13 @@ private:
         '|',
     };
 
+    const std::set<char> dfa_blanks{
+        ' ',
+        '\n',
+        '\r',
+        '\t',
+    };
+
     const int unknown_state{0};
 
     static bool has_duplicate_movement(int &out_state_now, const char chr, const std::vector<StateMoveUnit> &src)
@@ -100,11 +107,11 @@ private:
 
     int move(int state, char cond);
 
-    static void pre_process(std::string &raw)
+    void pre_process(std::string &raw) const
     {
         for (auto i = raw.begin(); i != raw.end(); ++i)
         {
-            if (*i == ' ')
+            if (dfa_blanks.contains(*i))
             {
                 raw.erase(i);
                 --i;
