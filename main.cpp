@@ -36,7 +36,6 @@ int main(const int argc, char *argv[])
     assert(code_file.is_open() && "error when opening code file!!");
     while (getline(code_file, raw_code))
     {
-        std::cout << raw_code << std::endl;
         lexer->add_tokens(raw_code);
     }
     code_file.close();

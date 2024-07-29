@@ -23,7 +23,7 @@ void Lexer::add_tokens(std::string_view raw)
         const int final_state{this->dfa.scan_move(lexeme, chr, end)};
 
         const TOKEN_TYPE type{this->dfa.get_token_type(final_state)};
-        if (type == UNKNOWN_TOKEN)
+        if (type == UNKNOWN_TOKEN || type <= TOKEN_DEF_BEGIN || type >= TOKEN_DEF_END)
             std::cerr << "Unknow token: " << lexeme << *chr << std::endl;
 
         if (token_table.contains(lexeme))
