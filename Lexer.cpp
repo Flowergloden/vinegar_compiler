@@ -3,7 +3,7 @@
 //
 
 #include "Lexer.h"
-Lexer::Lexer(DFA &dfa, const std::string_view raw) : dfa(dfa)
+void Lexer::add_tokens(std::string_view raw)
 {
     auto chr = raw.begin();
     const auto end = raw.end();
@@ -11,6 +11,7 @@ Lexer::Lexer(DFA &dfa, const std::string_view raw) : dfa(dfa)
     {
         if (this->dfa.separators.contains(*chr))
         {
+            ++chr;
             continue;
         }
 
@@ -39,6 +40,7 @@ Lexer::Lexer(DFA &dfa, const std::string_view raw) : dfa(dfa)
         ++chr;
     }
 }
+
 void Lexer::print_all_tokens()
 {
     std::cout << "\nTokens: \n";
