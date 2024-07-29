@@ -467,11 +467,15 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
             if ((just_match_bracket || just_match_range_bracket) &&
                 (chr + 1 == raw.end() || !dfa_symbols.contains(*(chr + 1))))
             {
-                buffer_passthrough(state_buffer);
-                state_buffer.pop_back();
-                --bracket;
+                if (!or_syntax_need_keep_a_bracket)
+                {
+                    buffer_passthrough(state_buffer);
+                    state_buffer.pop_back();
+                    --bracket;
+                }
                 just_match_bracket = false;
                 just_match_range_bracket = false;
+                or_syntax_need_keep_a_bracket = false;
             }
         }
         assert(state_buffer.size() == 1 && "Unmatched bracket!!");
