@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -6,11 +7,24 @@
 #include "utils/DFA.h"
 #include "utils/Token.h"
 
-int main()
+int main(const int argc, char *argv[])
 {
-    const std::vector<DFARaw> dfa_samples{
-        {ID, "abc"}
-    };
+    assert(argc >= 2 && "missing parameter!!");
+
+    std::ifstream file{argv[1]};
+
+    assert(file.is_open() && "error when opening dfa defination file!!");
+
+    std::vector<DFARaw> dfa_samples{};
+    std::string raw{};
+    while (getline(file, raw))
+    {
+        auto pos = raw.find(':');
+        TOKEN_TYPE type = get_enum_by_name(raw.substr(0, pos));
+        std::string src{raw.substr(pos + 1, raw.size() - pos)};
+        dfa_samples.push_back({type, src});
+    }
+
 
     const std::string raw_code{"True False abc //123"};
 
