@@ -44,6 +44,7 @@ public:
         ' ',
         '\n',
         '\t',
+        '\r',
     };
 
     // TEST ONLY
@@ -65,13 +66,6 @@ private:
         '*',
         '+',
         '|',
-    };
-
-    const std::set<char> dfa_blanks{
-        ' ',
-        '\n',
-        '\r',
-        '\t',
     };
 
     const int unknown_state{0};
@@ -111,7 +105,7 @@ private:
     {
         for (auto i = raw.begin(); i != raw.end(); ++i)
         {
-            if (dfa_blanks.contains(*i))
+            if (separators.contains(*i))
             {
                 raw.erase(i);
                 --i;
