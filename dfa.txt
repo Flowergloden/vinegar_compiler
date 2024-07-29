@@ -1,0 +1,10 @@
+id: [A-z] ([A-z] | [0-9])+
+comment: //
+greater_than: >
+question: ?
+black_tick: `
+sharp: #
+l_bracket: {
+r_bracket: }
+vertical_bar: \|
+arrow: =>
