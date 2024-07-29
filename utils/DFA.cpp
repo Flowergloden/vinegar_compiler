@@ -425,7 +425,7 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
                 {
                     or_syntax_request_flag = true;
 
-                    if (!*(chr - 1) == ')' && !*(chr - 1) == ']')
+                    if (*(chr - 1) != ')' && *(chr - 1) != ']')
                     {
                         state_buffer.push_back({latest_state_buffer.back()});
                     }
