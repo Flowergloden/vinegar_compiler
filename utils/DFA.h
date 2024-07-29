@@ -24,8 +24,6 @@ class DFA
 public:
     explicit DFA(const std::vector<DFARaw> &src);
 
-    explicit DFA(const std::vector<DFARaw> &src, int);
-
     const int first_state{0};
 
     int scan_move(std::string &lexeme, std::string_view::iterator &chr, const std::string_view::iterator &end);
@@ -69,9 +67,18 @@ private:
 
     const int unknown_state{0};
 
-    bool has_repeat_state_move_unit(int &state_now, std::string_view::value_type chr);
-    static bool has_repeat_state_move_unit(int &out_state_now, std::string_view::value_type chr,
-                                           const std::vector<StateMoveUnit> &src);
+    static bool has_duplicate_movement(int &out_state_now, const char chr, const std::vector<StateMoveUnit> &src)
+    {
+        for (auto [state, cond, next_state] : src)
+        {
+            if (state == out_state_now && cond == chr)
+            {
+                out_state_now = next_state;
+                return true;
+            }
+        }
+        return false;
+    }
 
     static bool has_duplicate_movement(int state, char cond, int next_state, std::vector<StateMoveUnit> &target)
     {

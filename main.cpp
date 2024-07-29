@@ -14,7 +14,7 @@ int main()
 
     const std::string raw_code{"True False abc //123"};
 
-    const std::unique_ptr<DFA> dfa{new DFA(dfa_samples, 1)};
+    const std::unique_ptr<DFA> dfa{new DFA(dfa_samples)};
     dfa->test_dfa();
 
     const std::unique_ptr<Lexer> lexer{new Lexer(*dfa, raw_code)};
