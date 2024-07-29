@@ -8,9 +8,11 @@
 // TEST ONLY
 #include <iostream>
 
+#include <algorithm>
 #include <cassert>
 #include <set>
 #include <vector>
+
 #include "Token.h"
 
 struct DFARaw
@@ -80,17 +82,20 @@ private:
         return false;
     }
 
-    static bool has_duplicate_movement(int state, char cond, int next_state, std::vector<StateMoveUnit> &target)
+    static bool has_duplicate_movement(const int state, const char cond, const int next_state,
+                                       const std::vector<StateMoveUnit> &src)
     {
-        for (auto [t_state, t_cond, t_next_state] : target)
-        {
-            if (state == t_state && cond == t_cond)
-            {
-                assert(next_state == t_next_state && "Unresolved condition!!"); // TODO: Deal with this
-                return true;
-            }
-        }
-        return false;
+        return std::ranges::any_of(src.begin(), src.end(),
+                                   [&](const StateMoveUnit &unit)
+                                   {
+                                       if (unit.state == state && unit.cond == cond)
+                                       {
+                                           assert(unit.next_state == next_state &&
+                                                  "Unresolved condition!!"); // TODO: Deal with this
+                                           return true;
+                                       }
+                                       return false;
+                                   });
     }
 
     int move(int state, char cond);

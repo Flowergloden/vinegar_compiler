@@ -147,6 +147,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
             if ((just_match_bracket || just_match_range_bracket) &&
                 (chr + 1 == raw.end() || !dfa_symbols.contains(*(chr + 1))))
             {
+#pragma region OR_SOLUTION_MULTIPLE
                 if (or_syntax_is_waiting_bracket)
                 {
                     auto &second_latest_state_buffer{state_buffer[state_buffer.size() - 2]};
@@ -169,6 +170,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
                     or_syntax_is_waiting_bracket = true;
                     or_syntax_request_flag = false;
                 }
+#pragma endregion
 
                 if (!or_syntax_need_keep_a_bracket)
                 {
