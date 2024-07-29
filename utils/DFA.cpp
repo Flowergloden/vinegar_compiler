@@ -86,6 +86,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
                     latest_state_buffer.pop_back(); // fall back previous movement
                     const char lhs{*(chr - 1)};
                     const char rhs{*(chr + 1)};
+                    assert(lhs <= rhs && "Unexpected range!!");
                     for (char i = lhs; i <= rhs; ++i)
                     {
                         latest_state_buffer.push_back({state, i, next_state});
