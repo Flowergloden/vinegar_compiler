@@ -28,8 +28,9 @@ DFA::DFA(const std::vector<DFARaw> &src)
             auto &latest_state_buffer = state_buffer.back();
             switch (*chr)
             {
-            case ' ':
-                continue;
+            case '\\':
+                ++chr;
+                goto default_case;
             case '(':
             case '[':
                 ++bracket;
@@ -128,6 +129,7 @@ DFA::DFA(const std::vector<DFARaw> &src)
 #pragma endregion
                 break;
 
+            default_case:
             default:
 #pragma region DEFAULT_SOLUTION
                 ++totol_state;
