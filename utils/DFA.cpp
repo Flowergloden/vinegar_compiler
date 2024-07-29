@@ -341,6 +341,7 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
         // flags
         bool just_match_bracket{false};
         bool just_match_range_bracket{false};
+        bool or_syntax_request_flag{false};
         bool or_syntax_is_waiting_bracket{false};
         bool or_syntax_need_keep_a_bracket{false};
 
@@ -422,12 +423,14 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
                 assert(chr + 1 != raw.end() && !dfa_symbols.contains(*(chr + 1)) && "Unresolved symbol: \"|\"");
                 if (*(chr + 1) == '(' || *(chr + 1) == '[')
                 {
-                    or_syntax_is_waiting_bracket = true;
+                    or_syntax_request_flag = true;
 
-                    if (*(chr - 1) == ')' || *(chr - 1) == ']')
+                    if (!*(chr - 1) == ')' && !*(chr - 1) == ']')
                     {
-                        or_syntax_need_keep_a_bracket = true;
+                        state_buffer.push_back({latest_state_buffer.back()});
                     }
+
+                    or_syntax_need_keep_a_bracket = true;
                 }
                 else
                 {
@@ -467,6 +470,29 @@ DFA::DFA(const std::vector<DFARaw> &src, int)
             if ((just_match_bracket || just_match_range_bracket) &&
                 (chr + 1 == raw.end() || !dfa_symbols.contains(*(chr + 1))))
             {
+                if (or_syntax_is_waiting_bracket)
+                {
+                    auto &second_latest_state_buffer{state_buffer[state_buffer.size() - 2]};
+
+                    const int o_state{second_latest_state_buffer.front().state};
+                    const int d_state{second_latest_state_buffer.back().next_state};
+
+                    latest_state_buffer.front().state = o_state;
+                    latest_state_buffer.back().next_state = d_state;
+                    state_now = d_state;
+                    --totol_state;
+
+                    buffer_passthrough(state_buffer);
+                    state_buffer.pop_back();
+                    or_syntax_is_waiting_bracket = false;
+                }
+
+                if (or_syntax_request_flag)
+                {
+                    or_syntax_is_waiting_bracket = true;
+                    or_syntax_request_flag = false;
+                }
+
                 if (!or_syntax_need_keep_a_bracket)
                 {
                     buffer_passthrough(state_buffer);
