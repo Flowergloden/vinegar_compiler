@@ -226,13 +226,13 @@ int DFA::move(const int state, const char cond)
 // TEST ONLY
 void DFA::test_dfa()
 {
-    std::cout << "state move matrix: \n";
+    std::cout << "\nstate move matrix: \n";
     for (auto [state, cond, next_state] : state_move_matrix)
     {
         std::cout << state << "  =>  " << next_state << "  by  " << cond << std::endl;
     }
 
-    std::cout << "final states: \n";
+    std::cout << "\nfinal states: \n";
     for (const auto [state, token_type] : final_state)
     {
         std::cout << state << ": " << token_type << std::endl;
