@@ -158,8 +158,21 @@ DFA::DFA(const std::vector<DFARaw> &src)
                     const int o_state{second_latest_state_buffer.front().state};
                     const int d_state{second_latest_state_buffer.back().next_state};
 
-                    latest_state_buffer.front().state = o_state;
-                    latest_state_buffer.back().next_state = d_state;
+                    const int buffer_origin{latest_state_buffer.front().state};
+                    const int buffer_dest{latest_state_buffer.back().next_state};
+
+                    for (auto &[state, cond, next_state] : latest_state_buffer)
+                    {
+                        if (state == buffer_origin)
+                        {
+                            state = o_state;
+                        }
+                        if (next_state == buffer_dest)
+                        {
+                            next_state = d_state;
+                        }
+                    }
+
                     state_now = d_state;
                     --totol_state;
 
