@@ -24,7 +24,7 @@ enum TOKEN_TYPE
     GREATER_THAN, // >
     QUESTION, // ?
     BLACK_TICK, // `
-    CHARP, // #
+    SHARP, // #
     L_BRACKET, // {
     R_BRACKET, // }
     VERTICAL_BAR, // |
@@ -48,7 +48,7 @@ constexpr std::array<std::string, 16> TOKEN_TYPE_NAME{
     "greater_than",
     "question",
     "black_tick",
-    "charp",
+    "sharp",
     "l_bracket",
     "r_bracket",
     "vertical_bar",
