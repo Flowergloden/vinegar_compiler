@@ -37,7 +37,7 @@ public:
             return final_state[state];
         }
 
-        return UNKNOWN_TOKEN;
+        return static_cast<TOKEN_TYPE>(-1);
     }
 
     const std::set<char> separators{
