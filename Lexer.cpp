@@ -11,6 +11,10 @@ void Lexer::add_tokens(std::string_view raw)
     {
         if (this->dfa.separators.contains(*chr))
         {
+            if (chr == end)
+            {
+                break;
+            }
             ++chr;
             continue;
         }
@@ -28,7 +32,7 @@ void Lexer::add_tokens(std::string_view raw)
         }
         else if (type == COMMENT)
         {
-            while (chr + 1 != end && *chr != '\n')
+            while (chr + 1 != end && *chr != '\n' && chr != end)
             {
                 ++chr;
             }
@@ -36,6 +40,10 @@ void Lexer::add_tokens(std::string_view raw)
         else
         {
             tokens.push_back({type, lexeme});
+        }
+        if (chr == end)
+        {
+            break;
         }
         ++chr;
     }
