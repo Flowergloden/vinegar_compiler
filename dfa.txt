@@ -9,3 +9,4 @@ r_bracket: }
 vertical_bar: \|
 arrow: =>
 colon: :
+comma: ,

@@ -30,6 +30,7 @@ enum TOKEN_TYPE
     VERTICAL_BAR, // |
     ARROW, // =>
     COLON, // :
+    COMMA, // ,
 
     EXTERN_TYPE,
 
@@ -59,6 +60,7 @@ constexpr std::array<std::string, TOKEN_DEF_END + 1> TOKEN_TYPE_NAME{
     "vertical_bar",
     "arrow",
     "colon",
+    "comma",
 
     "extern_type",
 
