@@ -3,9 +3,9 @@
 #include <memory>
 #include <vector>
 
-#include "../src/Lexer.h"
-#include "../src/utils/DFA.h"
-#include "../src/utils/Token.h"
+#include <Lexer.h>
+#include <utils/DFA.h>
+#include <utils/Token.h>
 
 int main(const int argc, char *argv[])
 {
@@ -20,9 +20,8 @@ int main(const int argc, char *argv[])
     while (getline(dfa_def, raw))
     {
         auto pos = raw.find(':');
-        TOKEN_TYPE type = get_enum_by_name(raw.substr(0, pos));
         std::string src{raw.substr(pos + 1, raw.size() - pos)};
-        dfa_samples.push_back({type, src});
+        dfa_samples.push_back({get_enum_by_name(raw.substr(0, pos)), src});
     }
     dfa_def.close();
 

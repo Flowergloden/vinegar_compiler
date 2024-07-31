@@ -17,6 +17,10 @@ target_link_libraries(vinegar_compiler
         PUBLIC
         lexer)
 
+target_include_directories(vinegar_compiler
+        PUBLIC
+        ../src)
+
 # Add tasks subprojects
 #include(cmake/utils.cmake)
 #add_subprojects(${CMAKE_SOURCE_DIR})
