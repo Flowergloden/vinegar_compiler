@@ -15,7 +15,7 @@ public:
 
     std::vector<Token> tokens{};
 
-    void add_tokens(std::string_view raw);
+    void add_tokens(std::string &raw);
 
     // DEBUG ONLY
     void print_all_tokens();

@@ -60,7 +60,7 @@ constexpr std::array<std::string, 16> TOKEN_TYPE_NAME{
     "token_def_end",
 };
 
-inline TOKEN_TYPE get_enum_by_name(std::string_view name)
+inline TOKEN_TYPE get_enum_by_name(const std::string_view name)
 {
     for (int i = 0; i < TOKEN_DEF_END; ++i)
     {

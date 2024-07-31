@@ -28,7 +28,7 @@ public:
 
     const int first_state{0};
 
-    int scan_move(std::string &lexeme, std::string_view::iterator &chr, const std::string_view::iterator &end);
+    int scan_move(std::string &lexeme, std::string::iterator &chr, const std::string::iterator &end);
 
     TOKEN_TYPE get_token_type(const int state)
     {
@@ -111,7 +111,7 @@ private:
                 --i;
             }
         }
-    };
+    }
 
     static void buffer_passthrough(std::vector<std::vector<StateMoveUnit>> &state_buffer)
     {
@@ -127,7 +127,7 @@ private:
                 second_latest_buffer.push_back({state, cond, next_state});
             }
         }
-    };
+    }
 
     static void buffer_passthrough(const std::vector<std::vector<StateMoveUnit>> &state_buffer,
                                    std::vector<StateMoveUnit> &state_move_matrix)
