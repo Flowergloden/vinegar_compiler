@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_subdirectory(apps)
 add_subdirectory(src)
-add_subdirectory(tests)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config/dfa.txt
         ${CMAKE_CURRENT_BINARY_DIR}/config/dfa.txt COPYONLY)
@@ -13,4 +12,5 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config/dfa.txt
 if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/code.vml
             ${CMAKE_CURRENT_BINARY_DIR}/code.vml COPYONLY)
+    add_subdirectory(tests)
 endif ()
