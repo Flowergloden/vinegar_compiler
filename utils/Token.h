@@ -29,6 +29,7 @@ enum TOKEN_TYPE
     R_BRACKET, // }
     VERTICAL_BAR, // |
     ARROW, // =>
+    COLON, // :
 
     EXTERN_TYPE,
 
@@ -57,6 +58,7 @@ constexpr std::array<std::string, TOKEN_DEF_END + 1> TOKEN_TYPE_NAME{
     "r_bracket",
     "vertical_bar",
     "arrow",
+    "colon",
 
     "extern_type",
 

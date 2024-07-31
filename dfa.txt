@@ -8,3 +8,4 @@ l_bracket: {
 r_bracket: }
 vertical_bar: \|
 arrow: =>
+colon: :
