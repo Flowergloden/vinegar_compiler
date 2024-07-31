@@ -11,7 +11,7 @@ int main(const int argc, char *argv[])
 {
     assert(argc >= 2 && "missing parameter!!");
 
-    std::ifstream dfa_def{"./config/dfa.txt"};
+    std::ifstream dfa_def{"../config/dfa.txt"};
 
     assert(dfa_def.is_open() && "error when opening dfa defination file!!");
 

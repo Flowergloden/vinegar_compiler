@@ -5,7 +5,7 @@
 # Tasks are added as separate sub-projects so as compilation errors in
 # one task don't affect another task.
 
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.28..3.30)
 project(vinegar_compiler)
 
 set(CMAKE_CXX_STANDARD 20)
