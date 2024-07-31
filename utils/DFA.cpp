@@ -253,6 +253,6 @@ void DFA::test_dfa()
     std::cout << "\nfinal states: \n";
     for (const auto [state, token_type] : final_state)
     {
-        std::cout << state << ": " << token_type << std::endl;
+        std::cout << state << ": " << TOKEN_TYPE_NAME[token_type] << std::endl;
     }
 }
