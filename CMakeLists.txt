@@ -3,9 +3,6 @@ project(vinegar_compiler)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(vinegar_compiler main.cpp
-        Lexer.cpp
-        Lexer.h
-        utils/Token.h
-        utils/DFA.cpp
-        utils/DFA.h)
+add_subdirectory(apps)
+add_subdirectory(src)
+add_subdirectory(tests)

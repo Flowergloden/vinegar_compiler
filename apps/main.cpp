@@ -3,9 +3,9 @@
 #include <memory>
 #include <vector>
 
-#include "Lexer.h"
-#include "utils/DFA.h"
-#include "utils/Token.h"
+#include "../src/Lexer.h"
+#include "../src/utils/DFA.h"
+#include "../src/utils/Token.h"
 
 int main(const int argc, char *argv[])
 {
