@@ -9,9 +9,9 @@
 
 int main(const int argc, char *argv[])
 {
-    assert(argc >= 3 && "missing parameter!!");
+    assert(argc >= 2 && "missing parameter!!");
 
-    std::ifstream dfa_def{argv[1]};
+    std::ifstream dfa_def{"./config/dfa.txt"};
 
     assert(dfa_def.is_open() && "error when opening dfa defination file!!");
 
@@ -32,7 +32,7 @@ int main(const int argc, char *argv[])
     dfa->test_dfa();
 
     std::string raw_code{};
-    std::ifstream code_file{argv[2]};
+    std::ifstream code_file{argv[1]};
     assert(code_file.is_open() && "error when opening code file!!");
     while (getline(code_file, raw_code))
     {
