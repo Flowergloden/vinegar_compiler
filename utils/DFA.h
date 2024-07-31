@@ -57,9 +57,15 @@ private:
         char cond;
         int next_state;
     };
-    std::vector<StateMoveUnit> state_move_matrix;
+    std::vector<StateMoveUnit> state_move_matrix{
+        {0, ' ', -1},
+        {0, '\t', -2},
+    };
 
-    std::map<int, TOKEN_TYPE> final_state;
+    std::map<int, TOKEN_TYPE> final_state{
+        {-1, BLANK},
+        {-2, TABLE},
+    };
 
     const std::set<char> dfa_symbols{
         '-',

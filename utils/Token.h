@@ -32,11 +32,15 @@ enum TOKEN_TYPE
 
     EXTERN_TYPE,
 
+    // separators
+    BLANK,
+    TABLE,
+
     UNKNOWN_TOKEN,
     TOKEN_DEF_END,
 };
 
-constexpr std::array<std::string, 16> TOKEN_TYPE_NAME{
+constexpr std::array<std::string, TOKEN_DEF_END + 1> TOKEN_TYPE_NAME{
     "token_def_begin",
 
     "id",
@@ -55,6 +59,9 @@ constexpr std::array<std::string, 16> TOKEN_TYPE_NAME{
     "arrow",
 
     "extern_type",
+
+    "blank",
+    "table",
 
     "unknown_token",
     "token_def_end",

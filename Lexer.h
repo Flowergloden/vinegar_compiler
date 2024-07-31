@@ -22,6 +22,23 @@ public:
 
 private:
     DFA &dfa;
+
+    std::set<char> separators{
+        '\r',
+        '\n',
+    };
+
+    void pre_process(std::string &raw) const
+    {
+        for (auto i = raw.begin(); i != raw.end(); ++i)
+        {
+            if (separators.contains(*i))
+            {
+                raw.erase(i);
+                --i;
+            }
+        }
+    }
 };
 
 

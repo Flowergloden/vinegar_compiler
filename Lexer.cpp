@@ -5,21 +5,12 @@
 #include "Lexer.h"
 void Lexer::add_tokens(std::string &raw)
 {
+    pre_process(raw);
+
     auto chr = raw.begin();
     const auto end = raw.end();
     while (chr != end)
     {
-        if (chr == end)
-        {
-            break;
-        }
-
-        if (this->dfa.separators.contains(*chr))
-        {
-            ++chr;
-            continue;
-        }
-
         std::string lexeme{};
         const int final_state{this->dfa.scan_move(lexeme, chr, end)};
 
