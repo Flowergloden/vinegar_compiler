@@ -10,6 +10,12 @@ project(vinegar_compiler)
 
 set(CMAKE_CXX_STANDARD 20)
 
-# Add tasks subprojects
-#include(cmake/utils.cmake)
-#add_subprojects(${CMAKE_SOURCE_DIR})
+add_executable(unit_test
+        unit_test.cpp)
+
+target_link_libraries(unit_test
+        parsing_table)
+
+target_include_directories(unit_test
+        PUBLIC
+        ../src)

@@ -21,10 +21,12 @@ add_library(lexer
         Lexer.cpp
         Lexer.h)
 
+add_library(parsing_table
+        SHARED
+        utils/parsing_table.cpp
+        utils/parsing_table.h
+        utils/Token.h)
+
 target_link_libraries(lexer
         PUBLIC
         dfa)
-
-# Add tasks subprojects
-#include(cmake/utils.cmake)
-#add_subprojects(${CMAKE_SOURCE_DIR})
