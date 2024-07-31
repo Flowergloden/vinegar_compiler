@@ -221,6 +221,7 @@ int DFA::scan_move(std::string &lexeme, std::string::iterator &chr, const std::s
         const int next_state = move(state, *chr);
         if (next_state == unknown_state)
         {
+            --chr;
             return state;
         }
 
