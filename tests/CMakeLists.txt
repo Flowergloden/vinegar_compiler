@@ -11,7 +11,7 @@ project(vinegar_compiler)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(unit_test
-        unit_test.cpp)
+        UnitTest.cpp)
 
 target_link_libraries(unit_test
         parsing_table)

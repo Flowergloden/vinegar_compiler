@@ -2,7 +2,7 @@
 // Created by huizeyang on 24-7-31.
 //
 
-#include "parsing_table.h"
+#include "ParsingTable.h"
 ParsingTable::ParsingTable(const std::vector<std::string> &raw)
 {
     std::map<std::string, std::string> ebnf{};

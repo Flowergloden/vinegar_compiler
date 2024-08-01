@@ -23,8 +23,8 @@ add_library(lexer
 
 add_library(parsing_table
         SHARED
-        utils/parsing_table.cpp
-        utils/parsing_table.h
+        utils/ParsingTable.cpp
+        utils/ParsingTable.h
         utils/Token.h)
 
 target_link_libraries(lexer
