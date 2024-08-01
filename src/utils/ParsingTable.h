@@ -5,32 +5,10 @@
 #ifndef PARSING_TABLE_H
 #define PARSING_TABLE_H
 
+#include <sstream>
 #include <string>
 #include <vector>
 #include "Token.h"
-
-class ParsingTable
-{
-public:
-    explicit ParsingTable(const std::vector<std::string> &raw);
-
-    [[nodiscard]] auto &get_first_set() const { return first_set; }
-
-    [[nodiscard]] auto &get_follow_set() const { return follow_set; }
-
-private:
-    std::map<std::string, std::vector<std::string>> first_set{};
-    std::map<std::string, std::vector<std::string>> follow_set{};
-
-    std::map<std::string, std::vector<std::string>> bnf{};
-
-    const std::string optional_terminal{"OPTIONAL"};
-
-    void ebnf_2_bnf(const std::map<std::string, std::string> &ebnf);
-
-    void calculate_first_set();
-    void calculate_follow_set();
-};
 
 class EBNFTree
 {
@@ -50,14 +28,40 @@ public:
         std::vector<EBNFNode> nodes{};
     };
 
-    explicit EBNFTree(std::string non_terminal, std::string pattern) :
-        non_terminal(std::move(non_terminal)), root(std::move(pattern)){};
+    explicit EBNFTree(std::string non_terminal, const std::string &pattern);
 
     std::string non_terminal;
     [[nodiscard]] EBNFNode get_root_node() const { return root; }
 
+    const std::string root_element{"ROOT_ELEMENT"};
+    const std::string or_symbol{"OR_SYMBOL"};
+    const std::string optional_symbol{"OPTIONAL_SYMBOL"};
+    const std::string group_symbol{"GROUP_SYMBOL"};
+
 private:
-    EBNFNode root;
+    EBNFNode root{root_element};
+};
+
+class ParsingTable
+{
+public:
+    explicit ParsingTable(const std::vector<std::string> &raw);
+
+    [[nodiscard]] auto &get_first_set() const { return first_set; }
+
+    [[nodiscard]] auto &get_follow_set() const { return follow_set; }
+
+private:
+    std::vector<EBNFTree> bnf_trees;
+    std::map<std::string, std::vector<std::string>> first_set{};
+    std::map<std::string, std::vector<std::string>> follow_set{};
+
+    const std::string optional_terminal{"OPTIONAL"};
+
+    void ebnf_2_bnf(const std::map<std::string, std::string> &ebnf);
+
+    void calculate_first_set();
+    void calculate_follow_set();
 };
 
 
