@@ -12,7 +12,7 @@
 class ParsingTable
 {
 public:
-    explicit ParsingTable(std::vector<std::string> &raw);
+    explicit ParsingTable(const std::vector<std::string> &raw);
 
     [[nodiscard]] auto &get_first_set() const { return first_set; }
 
@@ -26,7 +26,7 @@ private:
 
     const std::string optional_terminal{"OPTIONAL"};
 
-    void ebnf_2_bnf(std::map<std::string, std::string> ebnf);
+    void ebnf_2_bnf(const std::map<std::string, std::string>& ebnf);
 
     void calculate_first_set();
     void calculate_follow_set();
