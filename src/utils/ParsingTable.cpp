@@ -29,10 +29,13 @@ void ParsingTable::calculate_follow_set() {}
 EBNFTree::EBNFTree(std::string non_terminal, const std::string &pattern) : non_terminal(std::move(non_terminal))
 {
     std::vector<std::string> elements{};
-    std::stringstream stream(pattern);
-    std::string buffer;
-    while (getline(stream, buffer, ' '))
+
+    size_t start;
+    size_t end{0};
+
+    while ((start = pattern.find_first_not_of(' ', end)) != std::string::npos)
     {
-        elements.push_back(buffer);
+        end = pattern.find(' ', start);
+        elements.push_back(pattern.substr(start, end - start));
     }
 }
