@@ -20,7 +20,7 @@ public:
 
         std::shared_ptr<EBNFNode> add_node(const std::string &root)
         {
-            return std::make_shared<EBNFNode>(nodes.emplace_back(root));
+            return nodes.emplace_back(std::make_shared<EBNFNode>(root));
         }
 
         [[nodiscard]] auto &get_root() const { return root; }
@@ -28,7 +28,7 @@ public:
 
     private:
         std::string root;
-        std::vector<EBNFNode> nodes{};
+        std::vector<std::shared_ptr<EBNFNode>> nodes{};
     };
 
     explicit EBNFTree(std::string non_terminal, const std::string &pattern);
