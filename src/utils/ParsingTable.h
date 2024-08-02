@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 #include "Token.h"
 
@@ -16,11 +17,14 @@ public:
     class EBNFNode
     {
     public:
+        explicit EBNFNode(std::string root, std::weak_ptr<EBNFNode> parent) :
+            root(std::move(root)), parent_node(std::move(parent)){};
+
         explicit EBNFNode(std::string root) : root(std::move(root)){};
 
         std::shared_ptr<EBNFNode> add_node(const std::string &root)
         {
-            return nodes.emplace_back(std::make_shared<EBNFNode>(root));
+            return nodes.emplace_back(std::make_shared<EBNFNode>(root, std::make_shared<EBNFNode>(*this)));
         }
 
         [[nodiscard]] auto &get_root() const { return root; }
@@ -28,6 +32,7 @@ public:
 
     private:
         std::string root;
+        std::weak_ptr<EBNFNode> parent_node;
         std::vector<std::shared_ptr<EBNFNode>> nodes{};
     };
 
