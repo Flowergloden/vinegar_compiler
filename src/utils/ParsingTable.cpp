@@ -38,4 +38,27 @@ EBNFTree::EBNFTree(std::string non_terminal, const std::string &pattern) : non_t
         end = pattern.find(' ', start);
         elements.push_back(pattern.substr(start, end - start));
     }
+
+    auto node{root};
+    for (const auto &element : elements)
+    {
+        if (element == "[")
+        {
+            continue;
+        }
+
+        if (element == "{")
+        {
+            continue;
+        }
+
+        if (element == "(")
+        {
+            continue;
+        }
+
+        node = node->add_node(element);
+        // node->add_node(element);
+        // node.reset(&node->get_nodes().back());
+    }
 }

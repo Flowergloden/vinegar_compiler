@@ -5,7 +5,7 @@
 #ifndef PARSING_TABLE_H
 #define PARSING_TABLE_H
 
-#include <sstream>
+#include <memory>
 #include <string>
 #include <vector>
 #include "Token.h"
@@ -18,7 +18,10 @@ public:
     public:
         explicit EBNFNode(std::string root) : root(std::move(root)){};
 
-        void add_node(const std::string &root) { nodes.emplace_back(root); }
+        std::shared_ptr<EBNFNode> add_node(const std::string &root)
+        {
+            return std::make_shared<EBNFNode>(nodes.emplace_back(root));
+        }
 
         [[nodiscard]] auto &get_root() const { return root; }
         [[nodiscard]] auto &get_nodes() const { return nodes; }
@@ -31,7 +34,7 @@ public:
     explicit EBNFTree(std::string non_terminal, const std::string &pattern);
 
     std::string non_terminal;
-    [[nodiscard]] EBNFNode get_root_node() const { return root; }
+    [[nodiscard]] std::shared_ptr<EBNFNode> get_root_node() const { return root; }
 
     const std::string root_element{"ROOT_ELEMENT"};
     const std::string or_symbol{"OR_SYMBOL"};
@@ -39,7 +42,7 @@ public:
     const std::string group_symbol{"GROUP_SYMBOL"};
 
 private:
-    EBNFNode root{root_element};
+    std::shared_ptr<EBNFNode> root{std::make_shared<EBNFNode>(root_element)};
 };
 
 class ParsingTable
