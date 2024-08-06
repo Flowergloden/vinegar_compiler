@@ -3,6 +3,7 @@
 //
 
 #include <utils/ParsingTable.h>
+#include <utils/BNFTree.h>
 
 int main()
 {
@@ -10,7 +11,10 @@ int main()
         "test: A B C D",
     };
 
-    ParsingTable table(raw);
+    // ParsingTable table(raw);
+    BNFNode node{"root"};
+
+    node.add_node("node1");
 
     return 0;
 }
