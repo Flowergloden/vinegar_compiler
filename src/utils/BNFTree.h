@@ -17,16 +17,16 @@ class BNFTree
 class BNFNode
 {
 public:
-    BNFNode(std::string &&root, std::shared_ptr<BNFNode> parent_node) :
-        root(std::move(root)), parent_node(std::move(parent_node))
+    BNFNode(std::string &root, const std::shared_ptr<BNFNode>& parent_node) :
+        root(std::move(root)), parent_node(parent_node)
     {
     }
 
-    explicit BNFNode(std::string &&root) : root(std::move(root)), parent_node(nullptr) {}
+    explicit BNFNode(std::string &&root) : root(std::move(root)) {}
 
     std::shared_ptr<BNFNode> add_node(std::string &&root)
     {
-        nodes.emplace_back(std::move(root), std::make_shared<BNFNode>(*self));
+        nodes.emplace_back(root, self);
         return std::make_shared<BNFNode>(nodes.back());
     };
 
@@ -34,7 +34,7 @@ public:
 
     std::string root;
 
-    std::shared_ptr<BNFNode> parent_node;
+    std::weak_ptr<BNFNode> parent_node;
 
     std::vector<BNFNode> nodes;
 };
