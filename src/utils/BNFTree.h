@@ -8,6 +8,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <cassert>
 
 
 class BNFNode : public std::enable_shared_from_this<BNFNode>
@@ -18,9 +19,9 @@ public:
     {
     }
 
-    explicit BNFNode(std::string &&root) : root(std::move(root)) {}
+    explicit BNFNode(std::string &root) : root(std::move(root)) {}
 
-    std::shared_ptr<BNFNode> add_node(std::string &&root)
+    std::shared_ptr<BNFNode> add_node(std::string &root)
     {
         nodes.emplace_back(std::make_shared<BNFNode>(root, shared_from_this()));
         return nodes.back();
@@ -46,6 +47,7 @@ public:
     inline static const std::string OR_NODE{"OR_NODE"};
     inline static const std::string OPTIONAL_NODE{"OPTIONAL_NODE"};
     inline static const std::string GROUP_NODE{"GROUP_NODE"};
+    inline static const std::string REPEAT_NODE{"REPEAT_NODE"};
 
     [[nodiscard]] std::shared_ptr<BNFNode> get_root_node() const { return root_node; }
 
