@@ -3,3 +3,4 @@
 //
 
 #include "BNFTree.h"
+BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_terminal(std::move(non_terminal)) {}

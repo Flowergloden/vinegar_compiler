@@ -40,6 +40,7 @@ class BNFTree
 {
 public:
     explicit BNFTree(std::string non_terminal) : non_terminal(std::move(non_terminal)) {}
+    BNFTree(std::string non_terminal, const std::string &pattern);
 
     inline static const std::string ROOT_NODE{"ROOT_NODE"};
     inline static const std::string OR_NODE{"OR_NODE"};
