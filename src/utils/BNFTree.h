@@ -14,10 +14,10 @@ class BNFTree
 {
 };
 
-class BNFNode
+class BNFNode : public std::enable_shared_from_this<BNFNode>
 {
 public:
-    BNFNode(std::string &root, const std::shared_ptr<BNFNode>& parent_node) :
+    BNFNode(std::string &root, const std::shared_ptr<BNFNode> &parent_node) :
         root(std::move(root)), parent_node(parent_node)
     {
     }
@@ -26,17 +26,18 @@ public:
 
     std::shared_ptr<BNFNode> add_node(std::string &&root)
     {
-        nodes.emplace_back(root, self);
-        return std::make_shared<BNFNode>(nodes.back());
-    };
+        nodes.emplace_back(std::make_shared<BNFNode>(root, shared_from_this()));
+        return nodes.back();
+    }
 
-    std::shared_ptr<BNFNode> self{this};
+    bool operator==(const BNFNode &rhs) const { return root == rhs.root; }
+    bool operator==(const std::string &rhs) const { return root == rhs; }
 
     std::string root;
 
-    std::weak_ptr<BNFNode> parent_node;
+    std::shared_ptr<BNFNode> parent_node;
 
-    std::vector<BNFNode> nodes;
+    std::vector<std::shared_ptr<BNFNode>> nodes;
 };
 
 

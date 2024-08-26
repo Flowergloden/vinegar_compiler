@@ -2,8 +2,9 @@
 // Created by huizeyang on 24-7-31.
 //
 
-#include <utils/ParsingTable.h>
+#include <iostream>
 #include <utils/BNFTree.h>
+#include <utils/ParsingTable.h>
 
 int main()
 {
@@ -12,9 +13,11 @@ int main()
     };
 
     // ParsingTable table(raw);
-    BNFNode node{"root"};
+    const auto node{std::make_shared<BNFNode>("root")};
 
-    node.add_node("node1");
+    node->add_node("node1");
+
+    std::cout << (*node->nodes.front() == "node1") << std::endl;
 
     return 0;
 }
