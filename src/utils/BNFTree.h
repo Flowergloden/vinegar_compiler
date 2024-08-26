@@ -35,7 +35,7 @@ public:
 
     std::string root;
 
-    std::shared_ptr<BNFNode> parent_node;
+    std::weak_ptr<BNFNode> parent_node;
 
     std::vector<std::shared_ptr<BNFNode>> nodes;
 };
