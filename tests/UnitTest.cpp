@@ -15,12 +15,7 @@ int main()
     // ParsingTable table(raw);
     // const auto node{std::make_shared<BNFNode>("root")};
 
-    const BNFTree tree{"Test"};
-    const auto node = tree.get_root_node();
-
-    node->add_node("node1");
-
-    std::cout << (*node->nodes.front() == "node1") << std::endl;
+    const BNFTree tree{"Test", "(AB CD) | {EF GH} [IJ]"};
 
     return 0;
 }
