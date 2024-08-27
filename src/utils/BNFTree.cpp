@@ -39,6 +39,8 @@ BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_ter
             break;
 
         case ')':
+        case ']':
+        case '}':
             assert(*node != ROOT_NODE && "Unexpected BNF tree structure!!");
             assert(!node->parent_node.expired() && "parent node incorrectly expired!!");
             // ensure no buffered non-terminal left
@@ -49,6 +51,20 @@ BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_ter
             }
 
             node = node->parent_node.lock();
+            break;
+
+        case '[':
+            {
+                const auto new_node = node->add_node(OPTIONAL_NODE);
+                node = new_node;
+            }
+            break;
+
+        case '{':
+            {
+                const auto new_node = node->add_node(REPEAT_NODE);
+                node = new_node;
+            }
             break;
 
         default:
