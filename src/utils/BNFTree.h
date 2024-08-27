@@ -59,6 +59,9 @@ public:
 
     const std::string non_terminal;
 
+    bool operator==(const BNFTree &rhs) const { return non_terminal == rhs.non_terminal; }
+    bool operator==(const std::string &rhs) const { return non_terminal == rhs; }
+
 private:
     std::shared_ptr<BNFNode> root_node{std::make_shared<BNFNode>(ROOT_NODE)};
 };
