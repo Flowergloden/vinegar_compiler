@@ -27,6 +27,12 @@ public:
         return nodes.back();
     }
 
+    std::shared_ptr<BNFNode> add_node(std::shared_ptr<BNFNode> target)
+    {
+        nodes.push_back(target);
+        return target;
+    }
+
     bool operator==(const BNFNode &rhs) const { return root == rhs.root; }
     bool operator==(const std::string &rhs) const { return root == rhs; }
 
