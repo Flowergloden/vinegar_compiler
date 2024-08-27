@@ -9,6 +9,8 @@ BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_ter
     std::shared_ptr<BNFNode> node = root_node;
     std::string buffer;
 
+    int waiting_finish_group{0};
+
     for (auto chr = pattern.begin(); chr != pattern.end(); ++chr)
     {
         switch (*chr)
@@ -22,14 +24,14 @@ BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_ter
             break;
 
         case '|':
-            if (*node != ROOT_NODE)
-            {
-                assert(!root_node->parent_node.expired() && "parent node incorrectly expired!!");
-                const auto new_node = node->parent_node.lock()->add_node(OR_NODE);
-                new_node->add_node(node);
-                node = new_node;
-            }
-            else
+            // if (*node != ROOT_NODE)
+            // {
+            //     assert(!root_node->parent_node.expired() && "parent node incorrectly expired!!");
+            //     const auto new_node = node->parent_node.lock()->add_node(OR_NODE);
+            //     new_node->add_node(node);
+            //     node = new_node;
+            // }
+            // else
             {
                 const auto forward_node = node->nodes.back();
                 node->nodes.pop_back();
@@ -38,6 +40,35 @@ BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_ter
                 node = new_node;
             }
             break;
+
+        case '(':
+            if (*node != ROOT_NODE)
+            {
+                assert(!root_node->parent_node.expired() && "parent node incorrectly expired!!");
+                const auto new_node = node->parent_node.lock()->add_node(GROUP_NODE);
+                new_node->add_node(node);
+                node = new_node;
+            }
+            else
+            {
+                const auto new_node = node->add_node(GROUP_NODE);
+                node = new_node;
+            }
+            break;
+
+        case ')':
+            assert(*node != ROOT_NODE && "Unexpected BNF tree structure!!");
+            assert(!node->parent_node.expired() && "parent node incorrectly expired!!");
+            // ensure no buffered non-terminal left
+            if (!buffer.empty())
+            {
+                node->add_node(buffer);
+                buffer.clear();
+            }
+
+            node = node->parent_node.lock();
+            break;
+
         default:
             buffer.push_back(*chr);
         }
