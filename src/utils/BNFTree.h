@@ -4,11 +4,11 @@
 
 #ifndef BNFTREE_H
 #define BNFTREE_H
+#include <cassert>
 #include <memory>
 #include <string>
 #include <utility>
 #include <vector>
-#include <cassert>
 
 
 class BNFNode : public std::enable_shared_from_this<BNFNode>
@@ -21,7 +21,7 @@ public:
 
     explicit BNFNode(std::string root) : root(std::move(root)) {}
 
-    std::shared_ptr<BNFNode> add_node(std::string &root)
+    std::shared_ptr<BNFNode> add_node(const std::string &root)
     {
         nodes.emplace_back(std::make_shared<BNFNode>(root, shared_from_this()));
         return nodes.back();
