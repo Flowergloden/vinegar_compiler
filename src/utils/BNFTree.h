@@ -14,12 +14,12 @@
 class BNFNode : public std::enable_shared_from_this<BNFNode>
 {
 public:
-    BNFNode(std::string &root, const std::shared_ptr<BNFNode> &parent_node) :
+    BNFNode(std::string root, const std::shared_ptr<BNFNode> &parent_node) :
         root(std::move(root)), parent_node(parent_node)
     {
     }
 
-    explicit BNFNode(std::string &root) : root(std::move(root)) {}
+    explicit BNFNode(std::string root) : root(std::move(root)) {}
 
     std::shared_ptr<BNFNode> add_node(std::string &root)
     {
@@ -54,7 +54,7 @@ public:
     const std::string non_terminal;
 
 private:
-    std::shared_ptr<BNFNode> root_node{std::make_shared<BNFNode>(ROOT_NODE.data())};
+    std::shared_ptr<BNFNode> root_node{std::make_shared<BNFNode>(ROOT_NODE)};
 };
 
 
