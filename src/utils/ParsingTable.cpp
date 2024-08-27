@@ -17,48 +17,9 @@ ParsingTable::ParsingTable(const std::vector<std::string> &raw)
         bnf_trees.emplace_back(non_terminal, pattern);
     }
 
-    ebnf_2_bnf(ebnf);
     calculate_first_set();
     calculate_follow_set();
 }
-void ParsingTable::ebnf_2_bnf(const std::map<std::string, std::string> &ebnf) {}
 
 void ParsingTable::calculate_first_set() {}
 void ParsingTable::calculate_follow_set() {}
-
-EBNFTree::EBNFTree(std::string non_terminal, const std::string &pattern) : non_terminal(std::move(non_terminal))
-{
-    std::vector<std::string> elements{};
-
-    size_t start;
-    size_t end{0};
-
-    while ((start = pattern.find_first_not_of(' ', end)) != std::string::npos)
-    {
-        end = pattern.find(' ', start);
-        elements.push_back(pattern.substr(start, end - start));
-    }
-
-    auto node{root};
-    for (const auto &element : elements)
-    {
-        if (element == "[")
-        {
-            continue;
-        }
-
-        if (element == "{")
-        {
-            continue;
-        }
-
-        if (element == "(")
-        {
-            continue;
-        }
-
-        node = node->add_node(element);
-        // node->add_node(element);
-        // node.reset(&node->get_nodes().back());
-    }
-}

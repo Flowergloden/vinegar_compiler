@@ -3,7 +3,6 @@
 //
 
 #include <iostream>
-#include <utils/BNFTree.h>
 #include <utils/ParsingTable.h>
 
 int main()
