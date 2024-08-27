@@ -9,8 +9,6 @@ BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_ter
     std::shared_ptr<BNFNode> node = root_node;
     std::string buffer;
 
-    int waiting_finish_group{0};
-
     for (auto chr = pattern.begin(); chr != pattern.end(); ++chr)
     {
         switch (*chr)
@@ -24,14 +22,6 @@ BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_ter
             break;
 
         case '|':
-            // if (*node != ROOT_NODE)
-            // {
-            //     assert(!root_node->parent_node.expired() && "parent node incorrectly expired!!");
-            //     const auto new_node = node->parent_node.lock()->add_node(OR_NODE);
-            //     new_node->add_node(node);
-            //     node = new_node;
-            // }
-            // else
             {
                 const auto forward_node = node->nodes.back();
                 node->nodes.pop_back();
@@ -42,14 +32,6 @@ BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_ter
             break;
 
         case '(':
-            if (*node != ROOT_NODE)
-            {
-                assert(!root_node->parent_node.expired() && "parent node incorrectly expired!!");
-                const auto new_node = node->parent_node.lock()->add_node(GROUP_NODE);
-                new_node->add_node(node);
-                node = new_node;
-            }
-            else
             {
                 const auto new_node = node->add_node(GROUP_NODE);
                 node = new_node;
@@ -71,6 +53,13 @@ BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_ter
 
         default:
             buffer.push_back(*chr);
+        }
+
+        // Check if or syntax has been fed with both lhs && rhs
+        if (*node == OR_NODE && node->nodes.size() >= 2)
+        {
+            assert(!node->parent_node.expired() && "parent node incorrectly expired!!");
+            node = node->parent_node.lock();
         }
     }
     // ensure no buffered non-terminal left
