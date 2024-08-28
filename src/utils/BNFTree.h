@@ -65,6 +65,8 @@ public:
 
 private:
     std::shared_ptr<BNFNode> root_node{std::make_shared<BNFNode>(ROOT_NODE)};
+    void expand() { expand_iter(root_node); }
+    void expand_iter(const std::shared_ptr<BNFNode>& target_node);
 };
 
 
