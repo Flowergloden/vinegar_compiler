@@ -54,6 +54,7 @@ public:
     inline static const std::string OPTIONAL_NODE{"OPTIONAL_NODE"};
     inline static const std::string GROUP_NODE{"GROUP_NODE"};
     inline static const std::string REPEAT_NODE{"REPEAT_NODE"};
+    inline static const std::string EMPTY_NODE{"EMPTY_NODE"};
 
     [[nodiscard]] std::shared_ptr<BNFNode> get_root_node() const { return root_node; }
 
