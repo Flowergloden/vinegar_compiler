@@ -58,7 +58,7 @@ public:
 
     [[nodiscard]] std::shared_ptr<BNFNode> get_root_node() const { return root_node; }
 
-    const std::string non_terminal;
+    std::string non_terminal;
 
     bool operator==(const BNFTree &rhs) const { return non_terminal == rhs.non_terminal; }
     bool operator==(const std::string &rhs) const { return non_terminal == rhs; }

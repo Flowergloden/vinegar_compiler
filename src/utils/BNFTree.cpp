@@ -9,9 +9,9 @@ BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_ter
     std::shared_ptr<BNFNode> node = root_node;
     std::string buffer;
 
-    for (auto chr = pattern.begin(); chr != pattern.end(); ++chr)
+    for (const char chr : pattern)
     {
-        switch (*chr)
+        switch (chr)
         {
         case ' ':
             if (!buffer.empty())
@@ -68,7 +68,7 @@ BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_ter
             break;
 
         default:
-            buffer.push_back(*chr);
+            buffer.push_back(chr);
         }
 
         // Check if or syntax has been fed with both lhs && rhs
@@ -84,4 +84,6 @@ BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_ter
         node->add_node(buffer);
         buffer.clear();
     }
+
+    root_node->root = GROUP_NODE;
 }
