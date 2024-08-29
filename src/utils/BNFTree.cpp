@@ -89,12 +89,14 @@ BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_ter
 
     expand();
 }
-void BNFTree::expand_iter(const std::shared_ptr<BNFNode> &target_node)
+void BNFTree::expand_iter(const std::shared_ptr<BNFNode> &target_node, const std::string &non_terminal)
 {
     for (const auto &node : target_node->nodes)
     {
-        expand_iter(node);
+        expand_iter(node, non_terminal);
     }
+
+    // TODO: expand children to this
 
     if (*target_node == OPTIONAL_NODE)
     {
@@ -102,7 +104,20 @@ void BNFTree::expand_iter(const std::shared_ptr<BNFNode> &target_node)
         auto pre_nodes = std::move(target_node->nodes);
         std::vector<std::shared_ptr<BNFNode>> new_nodes{{std::make_shared<BNFNode>(GROUP_NODE)},
                                                         {std::make_shared<BNFNode>(EMPTY_NODE)}};
+        new_nodes.front()->nodes = std::move(pre_nodes);
         target_node->nodes = std::move(new_nodes);
-        target_node->nodes.front()->nodes = std::move(pre_nodes);
+    }
+
+    if (*target_node == REPEAT_NODE)
+    {
+        target_node->root = OR_NODE;
+        auto pre_nodes = std::move(target_node->nodes);
+        std::vector<std::shared_ptr<BNFNode>> new_nodes{{std::make_shared<BNFNode>(GROUP_NODE)},
+                                                        {std::make_shared<BNFNode>(EMPTY_NODE)}};
+
+        new_nodes.front()->nodes = std::move(pre_nodes);
+        new_nodes.front()->add_node(non_terminal);
+
+        target_node->nodes = std::move(new_nodes);
     }
 }
