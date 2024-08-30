@@ -89,6 +89,25 @@ BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_ter
 
     expand();
 }
+
+void BNFTree::combine_same_terms(const std::shared_ptr<BNFNode> &target_node)
+{
+    for (auto i = target_node->nodes.begin(); i != target_node->nodes.end(); ++i)
+    {
+        if (**i == *target_node)
+        {
+            const auto pre_node = *i;
+            i = target_node->nodes.erase(i);
+            for (const auto &node : pre_node->nodes)
+            {
+                i = target_node->nodes.insert(i, node);
+            }
+        }
+    }
+}
+
+void BNFTree::deal_with_or(const std::shared_ptr<BNFNode> &target_node) {}
+
 void BNFTree::expand_iter(const std::shared_ptr<BNFNode> &target_node, const std::string &non_terminal)
 {
     for (const auto &node : target_node->nodes)
@@ -96,8 +115,7 @@ void BNFTree::expand_iter(const std::shared_ptr<BNFNode> &target_node, const std
         expand_iter(node, non_terminal);
     }
 
-    // TODO: expand children to this
-
+    // deal with specific syntax first
     if (*target_node == OPTIONAL_NODE)
     {
         target_node->root = OR_NODE;
@@ -120,4 +138,11 @@ void BNFTree::expand_iter(const std::shared_ptr<BNFNode> &target_node, const std
 
         target_node->nodes = std::move(new_nodes);
     }
+
+    // expand children nodes to this
+    if (*target_node == GROUP_NODE)
+    {
+        deal_with_or(target_node);
+    }
+    combine_same_terms(target_node);
 }
