@@ -21,5 +21,6 @@ ParsingTable::ParsingTable(const std::vector<std::string> &raw)
     calculate_follow_set();
 }
 
+void ParsingTable::eliminate_left_recursion() {}
 void ParsingTable::calculate_first_set() {}
 void ParsingTable::calculate_follow_set() {}

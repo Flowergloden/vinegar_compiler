@@ -106,7 +106,10 @@ void BNFTree::combine_same_terms(const std::shared_ptr<BNFNode> &target_node)
     }
 }
 
-void BNFTree::deal_with_or(const std::shared_ptr<BNFNode> &target_node) {}
+void BNFTree::deal_with_or(const std::shared_ptr<BNFNode> &target_node)
+{
+    std::vector<std::shared_ptr<BNFNode>> or_nodes{};
+}
 
 void BNFTree::expand_iter(const std::shared_ptr<BNFNode> &target_node, const std::string &non_terminal)
 {

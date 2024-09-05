@@ -9,12 +9,16 @@ int main()
 {
     std::vector<std::string> raw{
         "test: A B C D",
+        "Test: (AB CD) | {EF GH} [IJ]",
+        "Combine: AB | CD | EF | GH | IJ",
+        "Combine_group: ((((AB CD )EF)GH)IJ)KL "
     };
 
     // ParsingTable table(raw);
     // const auto node{std::make_shared<BNFNode>("root")};
 
-    const BNFTree tree{"Test", "(AB CD) | {EF GH} [IJ]"};
+    // const BNFTree tree{"Test", "(AB CD) | {EF GH} [IJ]"};
+    const ParsingTable table{raw};
 
     return 0;
 }

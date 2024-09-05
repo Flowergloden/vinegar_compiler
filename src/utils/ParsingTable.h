@@ -24,8 +24,7 @@ private:
     std::map<std::string, std::vector<std::string>> first_set{};
     std::map<std::string, std::vector<std::string>> follow_set{};
 
-    const std::string optional_terminal{"OPTIONAL"};
-
+    void eliminate_left_recursion();
     void calculate_first_set();
     void calculate_follow_set();
 };
