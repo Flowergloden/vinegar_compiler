@@ -4,6 +4,8 @@
 
 #ifndef BNFTREE_H
 #define BNFTREE_H
+#include <array>
+#include <bitset>
 #include <cassert>
 #include <memory>
 #include <string>
