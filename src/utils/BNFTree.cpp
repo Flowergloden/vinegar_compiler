@@ -150,12 +150,12 @@ void BNFTree::expand_iter(const std::shared_ptr<BNFNode> &target_node, const std
     combine_same_terms(target_node);
 }
 
-template <int N>
+template <std::size_t N>
 BitFlagSimulator<N>::BitFlagSimulator(std::array<int, N> byte_maximums) : byte_maximums(std::move(byte_maximums))
 {
     bytes = new std::array<int, N>(0);
 }
-template <int N>
+template <std::size_t N>
 int BitFlagSimulator<N>::operator&(std::bitset<N> rhs)
 {
     int index{0};
@@ -169,11 +169,11 @@ int BitFlagSimulator<N>::operator&(std::bitset<N> rhs)
 
     return bytes[index];
 }
-template <int N>
+template <std::size_t N>
 std::array<int, N> BitFlagSimulator<N>::operator++()
 {
 }
-template <int N>
+template <std::size_t N>
 std::array<int, N> BitFlagSimulator<N>::operator++(int)
 {
 }

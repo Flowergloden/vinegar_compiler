@@ -73,7 +73,7 @@ private:
     static void expand_iter(const std::shared_ptr<BNFNode> &target_node, const std::string &non_terminal);
 };
 
-template <int N>
+template <std::size_t N>
 class BitFlagSimulator
 {
 public:
