@@ -7,12 +7,13 @@
 
 int main()
 {
-    std::vector<std::string> raw{
-        "test: A B C D",
-        "Test: (AB CD) | {EF GH} [IJ]",
-        "Combine: AB | CD | EF | GH | IJ",
-        "Combine_group: ((((AB CD )EF)GH)IJ)KL "
-    };
+    const std::vector<std::string> raw{"test: A B C D", "Test: (AB CD) | {EF GH} [IJ]",
+                                       "Combine: AB | CD | EF | GH | IJ", "Combine_group: ((((AB CD )EF)GH)IJ)KL "};
+
+
+    BitFlagSimulator<8> bit_flag{{1, 2, 3, 4, 5, 6, 7, 8}};
+    constexpr std::bitset<8> mask{1};
+    std::cout << (bit_flag & mask) << std::endl;
 
     // ParsingTable table(raw);
     // const auto node{std::make_shared<BNFNode>("root")};

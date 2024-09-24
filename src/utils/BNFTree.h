@@ -73,5 +73,19 @@ private:
     static void expand_iter(const std::shared_ptr<BNFNode> &target_node, const std::string &non_terminal);
 };
 
+template <int N>
+class BitFlagSimulator
+{
+public:
+    explicit BitFlagSimulator(std::array<int, N> byte_maximums);
+    int operator&(std::bitset<N> rhs);
+    std::array<int, N> operator++(); // Prefix
+    std::array<int, N> operator++(int); // Suffix
+
+private:
+    std::array<int, N> bytes;
+    std::array<int, N> byte_maximums;
+};
+
 
 #endif // BNFTREE_H

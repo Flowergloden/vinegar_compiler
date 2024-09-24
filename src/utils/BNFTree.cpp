@@ -4,19 +4,6 @@
 
 #include "BNFTree.h"
 
-template <int N>
-class BitFlagSimulator
-{
-public:
-    std::array<int, N> operator&(std::bitset<N> rhs);
-    std::array<int, N> operator++(); // Prefix
-    std::array<int, N> operator++(int); // Suffix
-
-private:
-    std::array<int, N> bytes{};
-    std::array<int, N> byte_maximums{};
-};
-
 BNFTree::BNFTree(std::string non_terminal, const std::string &pattern) : non_terminal(std::move(non_terminal))
 {
     std::shared_ptr<BNFNode> node = root_node;
@@ -161,4 +148,32 @@ void BNFTree::expand_iter(const std::shared_ptr<BNFNode> &target_node, const std
         deal_with_or(target_node);
     }
     combine_same_terms(target_node);
+}
+
+template <int N>
+BitFlagSimulator<N>::BitFlagSimulator(std::array<int, N> byte_maximums) : byte_maximums(std::move(byte_maximums))
+{
+    bytes = new std::array<int, N>(0);
+}
+template <int N>
+int BitFlagSimulator<N>::operator&(std::bitset<N> rhs)
+{
+    int index{0};
+    std::bitset<N> left{1};
+    left = left << N - 1;
+    while (rhs != left)
+    {
+        rhs = rhs << 1;
+        ++index;
+    }
+
+    return bytes[index];
+}
+template <int N>
+std::array<int, N> BitFlagSimulator<N>::operator++()
+{
+}
+template <int N>
+std::array<int, N> BitFlagSimulator<N>::operator++(int)
+{
 }
