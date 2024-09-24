@@ -25,10 +25,19 @@ add_library(parsing_table
         SHARED
         utils/ParsingTable.cpp
         utils/ParsingTable.h
-        utils/Token.h
+        utils/Token.h)
+
+add_library(bnf_tree
+        SHARED
         utils/BNFTree.cpp
-        utils/BNFTree.h)
+        utils/BNFTree.h
+        utils/BitFlagSimulator.cpp
+        utils/BitFlagSimulator.h)
 
 target_link_libraries(lexer
         PUBLIC
         dfa)
+
+target_link_libraries(parsing_table
+        PUBLIC
+        bnf_tree)

@@ -4,13 +4,13 @@
 
 #ifndef BNFTREE_H
 #define BNFTREE_H
-#include <array>
-#include <bitset>
 #include <cassert>
 #include <memory>
 #include <string>
 #include <utility>
 #include <vector>
+
+#include "BitFlagSimulator.h"
 
 
 class BNFNode : public std::enable_shared_from_this<BNFNode>
@@ -71,20 +71,6 @@ private:
     static void combine_same_terms(const std::shared_ptr<BNFNode> &target_node);
     static void deal_with_or(const std::shared_ptr<BNFNode> &target_node);
     static void expand_iter(const std::shared_ptr<BNFNode> &target_node, const std::string &non_terminal);
-};
-
-template <std::size_t N>
-class BitFlagSimulator
-{
-public:
-    explicit BitFlagSimulator(std::array<int, N> byte_maximums);
-    int operator&(std::bitset<N> rhs);
-    std::array<int, N> operator++(); // Prefix
-    std::array<int, N> operator++(int); // Suffix
-
-private:
-    std::array<int, N> bytes;
-    std::array<int, N> byte_maximums;
 };
 
 
