@@ -31,7 +31,6 @@ add_library(bnf_tree
         SHARED
         utils/BNFTree.cpp
         utils/BNFTree.h
-        utils/BitFlagSimulator.cpp
         utils/BitFlagSimulator.h)
 
 target_link_libraries(lexer

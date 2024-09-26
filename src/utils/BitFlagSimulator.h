@@ -19,8 +19,8 @@ public:
     std::array<int, N> operator++(int); // Suffix
 
 private:
-    std::array<int, N> bytes;
-    std::array<int, N> byte_maximums{};
+    std::array<int, N> bytes{};
+    std::array<int, N> byte_maximums;
 };
 
 template <std::size_t N>

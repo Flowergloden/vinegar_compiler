@@ -12,7 +12,7 @@ int main()
 
 
     BitFlagSimulator<8> bit_flag{{1, 2, 3, 4, 5, 6, 7, 8}};
-    constexpr std::bitset<8> mask{1};
+    constexpr std::bitset<8> mask{0b10000000};
     std::cout << (bit_flag & mask) << std::endl;
 
     // ParsingTable table(raw);
