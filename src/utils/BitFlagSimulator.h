@@ -41,13 +41,33 @@ int BitFlagSimulator<N>::operator&(std::bitset<N> rhs)
 template <std::size_t N>
 std::array<int, N> BitFlagSimulator<N>::operator++()
 {
+    for (int i = N - 1; i >= 0; --i)
+    {
+        if (bytes[i] < byte_maximums[i])
+        {
+            ++bytes[i];
+            break;
+        }
+    }
+
     return bytes;
 }
 
 template <std::size_t N>
 std::array<int, N> BitFlagSimulator<N>::operator++(int)
 {
-    return bytes;
+    auto prev_bytes = bytes;
+
+    for (int i = N - 1; i >= 0; --i)
+    {
+        if (bytes[i] < byte_maximums[i])
+        {
+            ++bytes[i];
+            break;
+        }
+    }
+
+    return prev_bytes;
 }
 
 #endif // BITFLAGSIMULATOR_H
