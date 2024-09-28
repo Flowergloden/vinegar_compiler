@@ -7,67 +7,32 @@
 #include <array>
 #include <bitset>
 #include <cstddef>
+#include <vector>
 
 
-template <std::size_t N>
 class BitFlagSimulator
 {
 public:
-    explicit BitFlagSimulator(std::array<int, N> byte_maximums) : byte_maximums(std::move(byte_maximums)) {}
-    int operator&(std::bitset<N> rhs);
-    std::array<int, N> operator++(); // Prefix
-    std::array<int, N> operator++(int); // Suffix
+    explicit BitFlagSimulator(const std::vector<int> &byte_maximums) :
+        length(byte_maximums.size()), byte_maximums(byte_maximums)
+    {
+        for (int i = 0; i < byte_maximums.size(); ++i)
+        {
+            bytes.push_back(0);
+        }
+    }
+
+    const size_t length;
+    static constexpr size_t MAX_LENGTH{16};
+
+    int operator&(std::bitset<MAX_LENGTH> rhs) const;
+    std::vector<int> operator++(); // Prefix
+    std::vector<int> operator++(int); // Suffix
 
 private:
-    std::array<int, N> bytes{};
-    std::array<int, N> byte_maximums;
+    std::vector<int> bytes{};
+    std::vector<int> byte_maximums{};
 };
 
-template <std::size_t N>
-int BitFlagSimulator<N>::operator&(std::bitset<N> rhs)
-{
-    int index{0};
-    std::bitset<N> left{1};
-    left = left << N - 1;
-    while (rhs != left)
-    {
-        rhs = rhs << 1;
-        ++index;
-    }
-
-    return bytes[index];
-}
-
-template <std::size_t N>
-std::array<int, N> BitFlagSimulator<N>::operator++()
-{
-    for (int i = N - 1; i >= 0; --i)
-    {
-        if (bytes[i] < byte_maximums[i])
-        {
-            ++bytes[i];
-            break;
-        }
-    }
-
-    return bytes;
-}
-
-template <std::size_t N>
-std::array<int, N> BitFlagSimulator<N>::operator++(int)
-{
-    auto prev_bytes = bytes;
-
-    for (int i = N - 1; i >= 0; --i)
-    {
-        if (bytes[i] < byte_maximums[i])
-        {
-            ++bytes[i];
-            break;
-        }
-    }
-
-    return prev_bytes;
-}
 
 #endif // BITFLAGSIMULATOR_H
