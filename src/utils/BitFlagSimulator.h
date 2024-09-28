@@ -13,7 +13,7 @@
 class BitFlagSimulator
 {
 public:
-    explicit BitFlagSimulator(const std::vector<int> &byte_maximums) :
+    explicit BitFlagSimulator(const std::vector<size_t> &byte_maximums) :
         length(byte_maximums.size()), byte_maximums(byte_maximums)
     {
         for (int i = 0; i < byte_maximums.size(); ++i)
@@ -31,7 +31,7 @@ public:
 
 private:
     std::vector<int> bytes{};
-    std::vector<int> byte_maximums{};
+    std::vector<size_t> byte_maximums{};
 };
 
 
