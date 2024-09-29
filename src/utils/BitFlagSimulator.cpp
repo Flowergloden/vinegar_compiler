@@ -19,14 +19,20 @@ int BitFlagSimulator::operator&(std::bitset<MAX_LENGTH> rhs) const
 
 std::vector<int> BitFlagSimulator::operator++()
 {
+    bool changed{false};
+
     for (int i = static_cast<int>(length) - 1; i >= 0; --i)
     {
         if (bytes[i] < byte_maximums[i])
         {
             ++bytes[i];
+            changed = true;
             break;
         }
     }
+
+    if (!changed)
+        expired = true;
 
     return bytes;
 }
@@ -34,15 +40,20 @@ std::vector<int> BitFlagSimulator::operator++()
 std::vector<int> BitFlagSimulator::operator++(int)
 {
     auto prev_bytes = bytes;
+    bool changed{false};
 
     for (int i = static_cast<int>(length) - 1; i >= 0; --i)
     {
         if (bytes[i] < byte_maximums[i])
         {
             ++bytes[i];
+            changed = true;
             break;
         }
     }
+
+    if (!changed)
+        expired = true;
 
     return prev_bytes;
 }

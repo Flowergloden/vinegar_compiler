@@ -24,6 +24,7 @@ public:
 
     const size_t length;
     static constexpr size_t MAX_LENGTH{16};
+    bool expired{false};
 
     int operator&(std::bitset<MAX_LENGTH> rhs) const;
     std::vector<int> operator++(); // Prefix
