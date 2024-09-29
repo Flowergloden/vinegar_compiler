@@ -108,7 +108,45 @@ void BNFTree::combine_same_terms(const std::shared_ptr<BNFNode> &target_node)
 
 void BNFTree::deal_with_or(const std::shared_ptr<BNFNode> &target_node)
 {
-    std::vector<std::shared_ptr<BNFNode>> or_nodes{};
+    target_node->root = OR_NODE;
+    std::vector<std::shared_ptr<BNFNode>> new_nodes{};
+
+    std::vector<size_t> byte_maximums{};
+    for (const auto &node : target_node->nodes)
+    {
+        if (*node == OR_NODE)
+        {
+            byte_maximums.push_back(node->nodes.size());
+        }
+    }
+
+    BitFlagSimulator bit_flag{byte_maximums};
+
+    std::bitset<BitFlagSimulator::MAX_LENGTH> bit_mask{1};
+    bit_mask <<= bit_flag.length - 1;
+    while (!bit_flag.expired)
+    {
+        new_nodes.push_back(std::make_shared<BNFNode>(GROUP_NODE));
+
+        size_t index{0};
+        for (const auto &node : target_node->nodes)
+        {
+            if (*node == OR_NODE)
+            {
+                new_nodes.back()->add_node(node->nodes[bit_flag & bit_mask >> index]);
+                ++index;
+            }
+            else
+            {
+                new_nodes.back()->add_node(node);
+            }
+        }
+
+        combine_same_terms(new_nodes.back());
+        ++bit_flag;
+    }
+
+    target_node->nodes = std::move(new_nodes);
 }
 
 void BNFTree::expand_iter(const std::shared_ptr<BNFNode> &target_node, const std::string &non_terminal)
