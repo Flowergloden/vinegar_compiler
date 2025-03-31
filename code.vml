@@ -1,17 +1,2 @@
-extern fn Func1
-extern fn CheckMagicNum
-extern fn UpMagicNum
-extern fn GetName
-
-Start:
-	`A` #`hello {GetName}`
-	>
-	  `B` `out2` | CheckMagicNum
-		`B` `out2 Alt`
-	`A` `out3`
-	?
-	  `yes` => Seq1
-		`no` => Seq1, UpMagicNum
-
-Seq1:
-	`A` `nop`
+// TODO: see blank as split like comma
+select (A=B projection (range (4 A1 A2 A3 A4) R))

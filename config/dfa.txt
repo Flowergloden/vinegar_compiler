@@ -1,12 +1,5 @@
-id: ([a-z] | [A-Z] | [0-9])+
+// TODO: find out why escape characters are not working
+id: ([a-z] | [A-Z] | [0-9] | \+ | _ | =)+
 comment: //
-greater_than: >
-question: ?
-black_tick: `
-sharp: #
-l_bracket: {
-r_bracket: }
-vertical_bar: \|
-arrow: =>
-colon: :
-comma: ,
+l_bracket: \(
+r_bracket: \)

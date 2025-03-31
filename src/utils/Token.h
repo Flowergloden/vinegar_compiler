@@ -15,24 +15,21 @@ enum TOKEN_TYPE
 
     ID,
     COMMENT,
-    LITERAL,
 
     // keywords
-    EXTERN,
+    SELECT,
+    UNION,
+    DIFFERENCE,
+    CARTESIAN_PRODUCT,
+    NATURAL_JOIN,
+    THETA_JOIN,
+    INTERSECTION,
+    DIVISION,
+    RANGE,
 
     // marks
-    GREATER_THAN, // >
-    QUESTION, // ?
-    BLACK_TICK, // `
-    SHARP, // #
-    L_BRACKET, // {
-    R_BRACKET, // }
-    VERTICAL_BAR, // |
-    ARROW, // =>
-    COLON, // :
-    COMMA, // ,
-
-    EXTERN_TYPE,
+    L_BRACKET, // (
+    R_BRACKET, // )
 
     // separators
     BLANK,
@@ -47,22 +44,19 @@ constexpr std::array<std::string, TOKEN_DEF_END + 1> TOKEN_TYPE_NAME{
 
     "id",
     "comment",
-    "literal",
 
-    "extern",
+    "select",
+    "union",
+    "difference",
+    "cartesian_product",
+    "natural_join",
+    "theta_join",
+    "intersection",
+    "division",
+    "range",
 
-    "greater_than",
-    "question",
-    "black_tick",
-    "sharp",
     "l_bracket",
     "r_bracket",
-    "vertical_bar",
-    "arrow",
-    "colon",
-    "comma",
-
-    "extern_type",
 
     "blank",
     "table",
@@ -100,10 +94,15 @@ struct Token
 };
 
 inline std::map<std::string_view, Token> token_table{
-    {"True", {LITERAL, "True", true}},
-    {"False", {LITERAL, "False", false}},
-    {"fn", {EXTERN_TYPE, "fn", 0, FUNCTION}},
-    {"extern", {EXTERN, "extern"}},
+    {"select", {SELECT, "select"}},
+    {"union", {UNION, "union"}},
+    {"difference", {DIFFERENCE, "difference"}},
+    {"cartesian_product", {CARTESIAN_PRODUCT, "cartesian_product"}},
+    {"natural_join", {NATURAL_JOIN, "natural_join"}},
+    {"theta_join", {THETA_JOIN, "theta_join"}},
+    {"intersection", {INTERSECTION, "intersection"}},
+    {"division", {DIVISION, "division"}},
+    {"range", {RANGE, "range"}},
 };
 
 
