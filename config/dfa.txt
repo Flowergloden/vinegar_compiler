@@ -1,5 +1,4 @@
-// TODO: find out why escape characters are not working
-id: ([a-z] | [A-Z] | [0-9] | \+ | _ | =)+
+id: ( \+ | _ | = | [a-z] | [A-Z] | [0-9])+
 comment: //
 l_bracket: \(
 r_bracket: \)
